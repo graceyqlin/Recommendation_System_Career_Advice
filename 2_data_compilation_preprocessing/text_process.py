@@ -14,8 +14,9 @@ def remove_non_ascii(words):
     for word in words:
         new_word = unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8', 'ignore')
         new_words.append(new_word)
-    return new_words
-
+    if len(new_words)>0:
+        return new_words
+    
 def to_lowercase(words):
     """Convert all characters to lowercase from list of tokenized words"""
     new_words = []
