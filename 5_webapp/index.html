@@ -11,8 +11,21 @@
   <body>
     <h1>MIDS Capstone</h1>
     <input id = "query">
-    <input id = "button" type = "button" value = "Click">
-    <p id = "answer"></p>
+    <input id = "button" type = "button" value = "Submit question">
+
+    <div id="tabs">
+    <ul>
+      <li><a href="#summary">See what people are saying</a></li>
+      <li><a href="#stats">View statistics on pay and employment</a></li>
+    </ul>
+    <div id="summary">
+        <p><strong>Here's a summary of answers to your question:</strong></p><br>
+        <p id = "answer"> </p>
+
+    </div>
+    <div id="stats">
+          <p><strong>Here's what people in this and related occupations are getting paid:</strong></p>
+    </div>
     
     
     <script src="js/jquery-1.11.0.min.js"></script>
