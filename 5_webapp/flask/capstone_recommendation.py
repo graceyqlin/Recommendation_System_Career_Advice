@@ -26,7 +26,7 @@ def find_answers(q_id):
     answers = list(data[data.questions_id == q_id].answers_body_clean)
     return answers
 
-def find_similar_questions(question_body)
+def find_similar_questions(question_body):
     x = vec.transform([question_body]).todense()
     scores = cosine_similarity(x, vec_matrix)
     similar_inds = scores.argsort()[0][-6:-1]
