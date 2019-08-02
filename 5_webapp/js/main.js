@@ -108,8 +108,9 @@ $(function() {
             var v = query.property("value");
             $.ajax({
                 beforeSend: function(req){
-                        req.setRequestHeader("Access-Control-Allow-Origin","*");
+                    req.setRequestHeader("Access-Control-Allow-Origin","*");
                 },
+                type: "POST",
                 url: flask_ip, 
                 data: {userinput: v}, 
                 success: function(data, status) {
