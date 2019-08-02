@@ -108,7 +108,7 @@ $(function() {
             var v = query.property("value");
             $.ajax({
                 url: flask_ip, 
-                headers: {'Access-Control-Allow-Origin': '*'}
+                headers: {'Access-Control-Allow-Origin': '*'},
                 data: {userinput: v}, 
                 success: function(data, status) {
                     answer.html(data.result);
