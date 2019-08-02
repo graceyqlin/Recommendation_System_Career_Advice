@@ -7,7 +7,7 @@ $(function() {
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
-    var flask_ip = 'http://10.128.0.3:5000/'
+    var flask_ip = 'http://35.225.248.118:8000/'
 
     var query = d3.select("#query");
 
