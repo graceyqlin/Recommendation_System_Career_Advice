@@ -14,4 +14,4 @@ def root():
     return response
 
 if __name__ == "__main__":
-    app.run(host = '35.225.248.118', port = '8000')
+    app.run(host = '35.225.248.118', port = '5001')
