@@ -4,7 +4,7 @@ import pymysql
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-connection = pymysql.connect(host='127.0.0.1',
+connection = pymysql.connect(host='135.226.35.190',
                              user='root',
                              password='capstone',
                              db='capstone')
