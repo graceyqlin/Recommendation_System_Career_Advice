@@ -58,7 +58,7 @@ def find_similar_questions(question_body):
     best_ind = occ_scores.argsort()[0][-1]
     best_occ = occupations[best_ind]
     # get the corresponding SOC code for that job
-    occ_soc = occ_df.loc[occ_df['Occupation'] == best_occ,'Code'].iloc[0]
+    occ_soc = occ_df.loc[occ_df['Occupation'] == best_occ,'Cod'].iloc[0]
         
     # add the input question, closest occupation and occupation SOC code to the output
     out['input_question_body']=question_body
