@@ -41,7 +41,7 @@ def find_answers(q_id):
 def find_similar_questions(question_body):
     
     # remove punctuation from input question and make lower-case
-    question_body_clean = question_body.lower().translate(string.maketrans({x: '' for x in string.punctuation}))
+    question_body_clean = question_body.lower().translate(string.punctuation.maketrans({x: '' for x in string.punctuation}))
     
     # vectorize input question
     x = vec.transform([question_body_clean]).todense()
