@@ -15,10 +15,11 @@ query = '''SELECT * FROM QA_FINAL'''
 data = pd.read_sql(query, connection)
 
 # read in BLS career dataset
-occ_df = pd.read_csv('../0_data/All_Career_Clusters.csv')
+query2 = '''SELECT * FROM career_clusters'''
+occ_df = pd.read_sql(query2, connection)
 
 # get just the occupation names
-occupations = soc_data['Occupation'].to_list()
+occupations = occ_df['Occupation'].to_list()
 
 # split up question dataset
 questions_ids = list(data.questions_id.unique())
