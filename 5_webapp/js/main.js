@@ -2,8 +2,8 @@ $(function() {
 
     // Set up globals
     var width = 900,
-        height = 700,
-        margin = {top: 20, right: 10, bottom: 60, left: 100},
+        height = 600,
+        margin = {top: 20, right: 10, bottom: 60, left: 150},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -79,16 +79,16 @@ $(function() {
 
     function dashboard(data) {
 
-        // console.log(data);
+        svg.selectAll("*").remove();
+        d3.selectAll("#wage_note").remove();
+
         var f = fill_null(data);
         if (f) {
             d3.select("#stats")
                 .append("p")
+                .attr("id": "wage_note")
                 .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
         };
-        // console.log(data);
-
-        svg.selectAll("*").remove();
 
         // Show the Y scale
         var y = d3.scaleBand()
@@ -97,14 +97,10 @@ $(function() {
             .paddingInner(1)
             .paddingOuter(.5);
         svg.append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("transform", "translate(" + margin.left + ",0)")
             .call(d3.axisLeft(y))
             .selectAll("text")  
-            .style("text-anchor", "end")
-            // .attr("dx", "-.8em")
-            // .attr("dy", ".15em")
-            // .attr("transform", "rotate(-45)")
-            ;
+            .style("text-anchor", "end");
 
         // Show the X scale
         var x = d3.scaleLinear()
@@ -113,6 +109,11 @@ $(function() {
         svg.append("g")
             .attr("transform", "translate(0," + figheight + ")")
             .call(d3.axisBottom(x));
+        svg.append("text")             
+            .attr("transform",
+                  "translate(" + (width/2) + " ," + (height + margin.bottom + 20) + ")")
+            .style("text-anchor", "middle")
+            .text("Wage ($ / Hour)");
 
         // Show the main horizontal line
         svg
