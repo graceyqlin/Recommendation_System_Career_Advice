@@ -37,7 +37,7 @@ $(function() {
         q_a
             .selectAll("h3")
             .data(grouped)
-            .html(function(d) { return d.values.question_body; })
+            .html(function(d) { return d.values[0].question_body; });
             // .enter()
             // .append("div")
             // .enter()
