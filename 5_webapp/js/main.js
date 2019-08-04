@@ -42,11 +42,12 @@ $(function() {
             .selectAll("div")
             .data(grouped)
             .html(function(d) { 
+                console.log(d);
                 out = "";
                 for (i=0; i<d.values.length; i++){
-                    out = out + "<p>Answer" + (i+1) + ":<br>" + d.values[1].answers + "</p>";
+                    out = out + "<p>Answer" + (i+1) + ":<br>" + d.values[i].answers + "</p>";
                 };
-                console.log(out);
+                // console.log(out);
                 return out; 
             });
     };
