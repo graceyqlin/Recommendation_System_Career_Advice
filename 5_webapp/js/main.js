@@ -1,9 +1,9 @@
 $(function() {
 
     // Set up globals
-    var width = 900,
-        height = 700,
-        margin = {top: 20, right: 10, bottom: 60, left: 60},
+    var width = 950,
+        height = 500,
+        margin = {top: 10, right: 10, bottom: 60, left: 175},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -11,7 +11,9 @@ $(function() {
 
     var query = d3.select("#query");
 
-    var answer = d3.select("#answer");
+    var summary = d3.select("#summary");
+
+    var q_a = d3.select("#accordion");
 
     var svg = d3.select("#stats").append("svg")
         .attr("width", width)
@@ -27,62 +29,118 @@ $(function() {
         };
     };
 
+    function fill_null(d) {
+        var filled = false;
+        for (i=0; i<d.length; i++){
+            if (!d[i].hourly_90) { 
+                d[i].hourly_90 = 100;
+                filled = true;
+            };
+            if (!d[i].hourly_75) { 
+                d[i].hourly_75 = 100;
+                filled = true;
+            };
+            if (!d[i].hourly_med) { 
+                d[i].hourly_med = 100;
+                filled = true;
+            };
+            if (!d[i].hourly_25) { 
+                d[i].hourly_25 = 100;
+                filled = true;
+            };
+            if (!d[i].hourly_10) { 
+                d[i].hourly_10 = 100;
+                filled = true;
+            };
+        }
+        return filled;
+    };
+
+    function format_qa_output(data){
+        var grouped = d3.nest()
+            .key(function(d) { return d.question_id; })
+            .entries(data);
+        q_a
+            .selectAll("h3")
+            .data(grouped)
+            .html(function(d) { return d.values[0].question_body; });
+        q_a
+            .selectAll("div")
+            .data(grouped)
+            .html(function(d) { 
+                out = "";
+                for (i=0; i<d.values.length; i++){
+                    out = out + "<p><i>Answer " + (i+1) + ":</i><br>" + d.values[i].answers + "</p>";
+                };
+                return out; 
+            })
+            .style("height", function(d) { return 100*d.values.length + "px" });
+    };
 
     function dashboard(data) {
 
-      // Going to need null handling soon
+        svg.selectAll("*").remove();
+        d3.selectAll("#wage_note").remove();
 
-        console.log(d3.map(data, function (d) { return lb(d.occupation); }).keys());
+        var f = fill_null(data);
+        if (f) {
+            d3.select("#stats")
+                .append("p")
+                .attr("id", "wage_note")
+                .style("font-size", 10)
+                .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
+        };
 
-        // Show the X scale
-        var x = d3.scaleBand()
-            .range([ margin.left, figwidth ])
-            .domain(d3.map(data, function (d) { return lb(d.occupation); }).keys())
+        // Show the Y scale
+        var y = d3.scaleBand()
+            .range([figheight, margin.bottom])
+            .domain(d3.map(data, function (d) { return d.occupation; }).keys())
             .paddingInner(1)
             .paddingOuter(.5);
         svg.append("g")
-            .attr("transform", "translate(0," + figheight + ")")
-            .call(d3.axisBottom(x))
+            .attr("transform", "translate(" + margin.left + ",0)")
+            .call(d3.axisLeft(y))
             .selectAll("text")  
-            .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em")
-            .attr("transform", "rotate(-45)");
+            .style("text-anchor", "end");
 
-        console.log(x.domain)
-
-        // Show the Y scale
-        var y = d3.scaleLinear()
+        // Show the X scale
+        var x = d3.scaleLinear()
             .domain([0, d3.max(data , function (d) { return d.hourly_90 }) + 5])
-            .range([figheight, margin.bottom])
+            .range([ margin.left, (margin.left+figwidth) ])
         svg.append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .call(d3.axisLeft(y));
+            .attr("transform", "translate(0," + figheight + ")")
+            .call(d3.axisBottom(x));
+        svg.append("text")             
+            .attr("transform",
+                  "translate(" + (margin.left + figwidth/2) + "," + (height - margin.bottom + 20) + ")")
+            .style("text-anchor", "middle")
+            .style("font-size", 10)
+            .text("Wage ($ / Hour)");
 
-        // Show the main vertical line
+        // Show the main horizontal line
         svg
-            .selectAll("vertLines")
+            .selectAll("horLines")
             .data(data)
             .enter()
             .append("line")
-              .attr("x1", function(d){ return x(lb(d.occupation)) })
-              .attr("x2", function(d){ return x(lb(d.occupation)) })
-              .attr("y1", function(d){ return y(d.hourly_10) })
-              .attr("y2", function(d){ return y(d.hourly_90) })
+              .attr("y1", function(d){ return y(d.occupation) })
+              .attr("y2", function(d){ return y(d.occupation) })
+              .attr("x1", function(d){ return x(d.hourly_10) })
+              .attr("x2", function(d){ return x(d.hourly_90) })
               .attr("stroke", "black")
               .style("width", 40)
 
         // rectangle for the main box
-        var boxWidth = figwidth / (data.length + 2)
+        var boxHeight = figheight / (data.length + 2)
         svg
             .selectAll("boxes")
             .data(data)
             .enter()
             .append("rect")
-                .attr("x", function(d){ return x(lb(d.occupation))-boxWidth/2 })
-                .attr("y", function(d){ return y(d.hourly_75) })
-                .attr("height", function(d){ return y(d.hourly_25)-y(d.hourly_75) })
-                .attr("width", boxWidth )
+                .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
+                .attr("x", function(d){ return x(d.hourly_25) })
+                .attr("width", function(d){ return x(d.hourly_75)-x(d.hourly_25) })
+                .attr("height", boxHeight )
                 .attr("stroke", "black")
                 .style("fill", "steelblue")
 
@@ -92,16 +150,17 @@ $(function() {
             .data(data)
             .enter()
             .append("line")
-              .attr("x1", function(d){ return x(lb(d.occupation))-boxWidth/2 })
-              .attr("x2", function(d){ return x(lb(d.occupation))+boxWidth/2 })
-              .attr("y1", function(d){ return y(d.hourly_med) })
-              .attr("y2", function(d){ return y(d.hourly_med) })
+              .attr("y1", function(d){ return y(d.occupation)-boxHeight/2 })
+              .attr("y2", function(d){ return y(d.occupation)+boxHeight/2 })
+              .attr("x1", function(d){ return x(d.hourly_med) })
+              .attr("x2", function(d){ return x(d.hourly_med) })
               .attr("stroke", "black")
               .style("width", 80)
-};
+    };
 
     // Set up jquery ui widgets
     $( "#tabs" ).tabs();
+    $( "#accordion" ).accordion();
 
     var button = d3.select("#button")
         .on("click", function() {
@@ -114,11 +173,10 @@ $(function() {
                 url: flask_ip, 
                 data: {userinput: v}, 
                 success: function(data, status) {
-                    answer.html(data.result);
-                    // This will eventually contain code to render summarized text
-                    // as well as code to chart data returned about the job title
-                    empl_data = [{'soc': '49-3031', 'employment': 264860, 'hourly_10': 15.0, 'hourly_25': 18.13, 'hourly_med': 22.76, 'hourly_75': 28.47, 'hourly_90': 34.7, 'occupation': 'Bus and Truck Mechanics and Diesel Engine Specialists', 'empl_2016': 278.8, 'empl_2026': 304.6, 'empl_chng': 25.8, 'empl_chng_pct': 9.2, 'entry_edu': 'High school diploma or equivalent', 'work_exp': 'None', 'otj_trainig': 'Long-term on-the-job training'}, {'soc': '53-3030', 'employment': 3130500, 'hourly_10': 10.21, 'hourly_25': 13.69, 'hourly_med': 18.66, 'hourly_75': 24.35, 'hourly_90': 30.55, 'occupation': 'Driver/Sales Workers and Truck Drivers', 'empl_2016': null, 'empl_2026': null, 'empl_chng': null, 'empl_chng_pct': null, 'entry_edu': null, 'work_exp': null, 'otj_trainig': null}, {'soc': '53-3032', 'employment': 1800330, 'hourly_10': 13.54, 'hourly_25': 16.85, 'hourly_med': 21.0, 'hourly_75': 26.16, 'hourly_90': 31.38, 'occupation': 'Heavy and Tractor-Trailer Truck Drivers', 'empl_2016': 1871.7, 'empl_2026': 1980.1, 'empl_chng': 108.4, 'empl_chng_pct': 5.8, 'entry_edu': 'Postsecondary nondegree award', 'work_exp': 'None', 'otj_trainig': 'Short-term on-the-job training'}, {'soc': '53-3033', 'employment': 915310, 'hourly_10': 9.74, 'hourly_25': 11.79, 'hourly_med': 15.78, 'hourly_75': 21.93, 'hourly_90': 30.14, 'occupation': 'Light Truck or Delivery Services Drivers', 'empl_2016': 953.5, 'empl_2026': 1015.6, 'empl_chng': 62.1, 'empl_chng_pct': 6.5, 'entry_edu': 'High school diploma or equivalent', 'work_exp': 'None', 'otj_trainig': 'Short-term on-the-job training'}, {'soc': '53-7051', 'employment': 604130, 'hourly_10': 11.98, 'hourly_25': 13.8, 'hourly_med': 16.71, 'hourly_75': 20.37, 'hourly_90': 24.82, 'occupation': 'Industrial Truck and Tractor Operators', 'empl_2016': 549.9, 'empl_2026': 585.9, 'empl_chng': 36.1, 'empl_chng_pct': 6.6, 'entry_edu': 'No formal educational credential', 'work_exp': 'None', 'otj_trainig': 'Short-term on-the-job training'}, {'soc': '53-7121', 'employment': 9000, 'hourly_10': 12.12, 'hourly_25': 14.39, 'hourly_med': 18.38, 'hourly_75': 24.2, 'hourly_90': 33.99, 'occupation': 'Tank Car, Truck, and Ship Loaders', 'empl_2016': 10.8, 'empl_2026': 11.4, 'empl_chng': 0.6, 'empl_chng_pct': 5.2, 'entry_edu': 'No formal educational credential', 'work_exp': 'None', 'otj_trainig': 'Short-term on-the-job training'}]
-                    dashboard(empl_data);
+                    console.log(data);
+                    summary.html(data.summary);
+                    format_qa_output(data.questions);
+                    dashboard(data.stats);
                 }
             })
         });
