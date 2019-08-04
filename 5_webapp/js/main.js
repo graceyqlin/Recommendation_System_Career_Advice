@@ -30,7 +30,7 @@ $(function() {
     };
 
     function format_qa_output(data){
-        accordion
+        q_a
             .selectAll("h3")
             .data(data)
             .enter()
