@@ -40,13 +40,14 @@ $(function() {
             .html(function(d) { return d.values[0].question_body; });
         q_a
             .selectAll("div")
-            .html(function(d) {
-                this
-                    .selectAll("p")
-                    .data(d)
-                    .enter()
-                    .append("p")
-                    .html(function(d) { return d.values.answers; });
+            .data(grouped)
+            .html(function(d) { 
+                out = "";
+                for (i=0; i<d.values.length; i++){
+                    out = out + "<p>Answer" + (i+1) + ":<br>" + d.values[1].answers + "</p>";
+                };
+                console.log(out);
+                return out; 
             });
     };
 
