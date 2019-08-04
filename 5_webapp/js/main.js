@@ -80,12 +80,14 @@ $(function() {
     function dashboard(data) {
 
       // Going to need null handling soon
+        console.log(data);
         var f = fill_null(data);
         if (f) {
             d3.select("#stats")
                 .append("p")
                 .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
         };
+        console.log(data);
 
         svg.selectAll("*").remove();
 
