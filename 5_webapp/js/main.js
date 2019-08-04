@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 900,
         height = 700,
-        margin = {top: 20, right: 10, bottom: 60, left: 60},
+        margin = {top: 20, right: 10, bottom: 60, left: 100},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -29,11 +29,37 @@ $(function() {
         };
     };
 
+    function fill_null(d) {
+        var filled = false;
+        for (i=0; i<d.length; i++){
+            if (d[i].hourly_90 === null) { 
+                d[i].hourly_90 = 100;
+                filled = true;
+            };
+            if (d[i].hourly_75 === null) { 
+                d[i].hourly_75 = 100;
+                filled = true;
+            };
+            if (d[i].hourly_med === null) { 
+                d[i].hourly_med = 100;
+                filled = true;
+            };
+            if (d[i].hourly_25 === null) { 
+                d[i].hourly_25 = 100;
+                filled = true;
+            };
+            if (d[i].hourly_10 === null) { 
+                d[i].hourly_10 = 100;
+                filled = true;
+            };
+        }
+        return filled;
+    };
+
     function format_qa_output(data){
         var grouped = d3.nest()
             .key(function(d) { return d.question_id; })
             .entries(data);
-        console.log(grouped);
         q_a
             .selectAll("h3")
             .data(grouped)
@@ -54,10 +80,14 @@ $(function() {
     function dashboard(data) {
 
       // Going to need null handling soon
+        var f = fill_null(data);
+        if (f) {
+            d3.select("#stats")
+                .append("p")
+                .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
+        };
 
         svg.selectAll("*").remove();
-
-        // console.log(d3.map(data, function (d) { return d.occupation; }).keys());
 
         // Show the X scale
         var x = d3.scaleBand()
@@ -138,11 +168,9 @@ $(function() {
                 url: flask_ip, 
                 data: {userinput: v}, 
                 success: function(data, status) {
-                    summary.html(data.summary)
-                    // + "<br><br>" + JSON.stringify(data.questions, null, 2));
+                    summary.html(data.summary);
                     format_qa_output(data.questions);
                     dashboard(data.stats);
-                    // https://jqueryui.com/accordion/
                 }
             })
         });
