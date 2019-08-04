@@ -111,7 +111,7 @@ $(function() {
             .call(d3.axisBottom(x));
         svg.append("text")             
             .attr("transform",
-                  "translate(" + (width/2) + " ," + (height + margin.bottom + 20) + ")")
+                  "translate(" + (margin.left + figwidth/2) + " ," + (height - margin.bottom + 20) + ")")
             .style("text-anchor", "middle")
             .text("Wage ($ / Hour)");
 
