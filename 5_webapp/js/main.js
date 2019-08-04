@@ -33,6 +33,7 @@ $(function() {
         var grouped = d3.nest()
             .key(function(d) { return d.question_id; })
             .entries(data);
+        console.log(grouped);
         q_a
             .selectAll("h3")
             .data(grouped)
