@@ -11,7 +11,7 @@ connection = pymysql.connect(host='35.226.35.190',
                              password='capstone',
                              db='capstone',
                              use_unicode = True,
-                             charset = 'utf-8')
+                             charset = 'utf8')
 
 query = '''SELECT * FROM QA_FINAL'''
 data = pd.read_sql(query, connection)
