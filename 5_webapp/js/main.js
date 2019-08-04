@@ -48,7 +48,7 @@ $(function() {
                 };
                 return out; 
             })
-            .style("height": function(d) { return 100*d.values.length + "px" });
+            .style("height", function(d) { return 100*d.values.length + "px" });
     };
 
     function dashboard(data) {
