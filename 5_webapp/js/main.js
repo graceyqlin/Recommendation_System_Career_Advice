@@ -11,7 +11,9 @@ $(function() {
 
     var query = d3.select("#query");
 
-    var answer = d3.select("#answer");
+    var summary = d3.select("#summary");
+
+    var q_a = d3.select("#accordion");
 
     var svg = d3.select("#stats").append("svg")
         .attr("width", width)
@@ -27,17 +29,26 @@ $(function() {
         };
     };
 
+    function format_qa_output(data){
+        accordion
+            .data(data)
+            .enter()
+            .append("h3")
+            .html(function(d) {d.question_body});
+    };
 
     function dashboard(data) {
 
       // Going to need null handling soon
 
-        console.log(d3.map(data, function (d) { return lb(d.occupation); }).keys());
+        svg.selectAll("*").remove();
+
+        console.log(d3.map(data, function (d) { return d.occupation; }).keys());
 
         // Show the X scale
         var x = d3.scaleBand()
             .range([ margin.left, figwidth ])
-            .domain(d3.map(data, function (d) { return lb(d.occupation); }).keys())
+            .domain(d3.map(data, function (d) { return d.occupation; }).keys())
             .paddingInner(1)
             .paddingOuter(.5);
         svg.append("g")
@@ -48,8 +59,6 @@ $(function() {
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
             .attr("transform", "rotate(-45)");
-
-        console.log(x.domain)
 
         // Show the Y scale
         var y = d3.scaleLinear()
@@ -65,8 +74,8 @@ $(function() {
             .data(data)
             .enter()
             .append("line")
-              .attr("x1", function(d){ return x(lb(d.occupation)) })
-              .attr("x2", function(d){ return x(lb(d.occupation)) })
+              .attr("x1", function(d){ return x(d.occupation) })
+              .attr("x2", function(d){ return x(d.occupation) })
               .attr("y1", function(d){ return y(d.hourly_10) })
               .attr("y2", function(d){ return y(d.hourly_90) })
               .attr("stroke", "black")
@@ -79,7 +88,7 @@ $(function() {
             .data(data)
             .enter()
             .append("rect")
-                .attr("x", function(d){ return x(lb(d.occupation))-boxWidth/2 })
+                .attr("x", function(d){ return x(d.occupation)-boxWidth/2 })
                 .attr("y", function(d){ return y(d.hourly_75) })
                 .attr("height", function(d){ return y(d.hourly_25)-y(d.hourly_75) })
                 .attr("width", boxWidth )
@@ -92,16 +101,17 @@ $(function() {
             .data(data)
             .enter()
             .append("line")
-              .attr("x1", function(d){ return x(lb(d.occupation))-boxWidth/2 })
-              .attr("x2", function(d){ return x(lb(d.occupation))+boxWidth/2 })
+              .attr("x1", function(d){ return x(d.occupation)-boxWidth/2 })
+              .attr("x2", function(d){ return x(d.occupation)+boxWidth/2 })
               .attr("y1", function(d){ return y(d.hourly_med) })
               .attr("y2", function(d){ return y(d.hourly_med) })
               .attr("stroke", "black")
               .style("width", 80)
-};
+    };
 
     // Set up jquery ui widgets
     $( "#tabs" ).tabs();
+    $( "#accordion" ).accordion();
 
     var button = d3.select("#button")
         .on("click", function() {
@@ -114,9 +124,11 @@ $(function() {
                 url: flask_ip, 
                 data: {userinput: v}, 
                 success: function(data, status) {
-                    answer.html(data.summary + "<br><br>" + JSON.stringify(data.questions, null, 2));
-                    empl_data = data.stats;
-                    dashboard(empl_data);
+                    summary.html(data.summary)
+                    // + "<br><br>" + JSON.stringify(data.questions, null, 2));
+                    format_qa_output(data.questions);
+                    dashboard(data.stats);
+                    // https://jqueryui.com/accordion/
                 }
             })
         });
