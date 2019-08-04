@@ -1,8 +1,8 @@
 $(function() {
 
     // Set up globals
-    var width = 900,
-        height = 600,
+    var width = 950,
+        height = 500,
         margin = {top: 20, right: 10, bottom: 60, left: 150},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
@@ -111,7 +111,7 @@ $(function() {
             .call(d3.axisBottom(x));
         svg.append("text")             
             .attr("transform",
-                  "translate(" + (margin.left + figwidth/2) + " ," + (height - margin.bottom + 20) + ")")
+                  "translate(" + (margin.left + figwidth/2) + "," + (height - margin.bottom + 20) + ")")
             .style("text-anchor", "middle")
             .text("Wage ($ / Hour)");
 
