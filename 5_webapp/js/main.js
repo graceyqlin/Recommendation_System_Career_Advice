@@ -35,7 +35,7 @@ $(function() {
             .entries(data);
         q_a
             .selectAll("h3")
-            .data(data)
+            .data(grouped)
             .html(function(d) { return d.values.question_body; })
             // .enter()
             // .append("div")
@@ -50,7 +50,7 @@ $(function() {
 
         svg.selectAll("*").remove();
 
-        console.log(d3.map(data, function (d) { return d.occupation; }).keys());
+        // console.log(d3.map(data, function (d) { return d.occupation; }).keys());
 
         // Show the X scale
         var x = d3.scaleBand()
