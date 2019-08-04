@@ -98,7 +98,7 @@ $(function() {
             .paddingOuter(.5);
         svg.append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .call(d3.axisLeft(x))
+            .call(d3.axisLeft(y))
             .selectAll("text")  
             .style("text-anchor", "end")
             // .attr("dx", "-.8em")
