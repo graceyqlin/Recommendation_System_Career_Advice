@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 500,
-        margin = {top: 20, right: 10, bottom: 60, left: 150},
+        margin = {top: 10, right: 10, bottom: 60, left: 175},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -87,6 +87,7 @@ $(function() {
             d3.select("#stats")
                 .append("p")
                 .attr("id", "wage_note")
+                .style("font-size": 10)
                 .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
         };
 
@@ -105,7 +106,7 @@ $(function() {
         // Show the X scale
         var x = d3.scaleLinear()
             .domain([0, d3.max(data , function (d) { return d.hourly_90 }) + 5])
-            .range([ margin.left, figwidth ])
+            .range([ margin.left, (margin.left+figwidth) ])
         svg.append("g")
             .attr("transform", "translate(0," + figheight + ")")
             .call(d3.axisBottom(x));
@@ -113,6 +114,7 @@ $(function() {
             .attr("transform",
                   "translate(" + (margin.left + figwidth/2) + "," + (height - margin.bottom + 20) + ")")
             .style("text-anchor", "middle")
+            .style("font-size", 10)
             .text("Wage ($ / Hour)");
 
         // Show the main horizontal line
