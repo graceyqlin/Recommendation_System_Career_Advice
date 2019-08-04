@@ -35,7 +35,12 @@ $(function() {
             .data(data)
             .enter()
             .append("h3")
-            .html(function(d) {d.question_body});
+            .html(function(d) { return d.question_body; })
+            .enter()
+            .append("div")
+            .enter()
+            .append("p")
+            .html(function(d) { return d.answers; });
     };
 
     function dashboard(data) {
