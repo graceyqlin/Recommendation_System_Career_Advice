@@ -86,7 +86,7 @@ $(function() {
         if (f) {
             d3.select("#stats")
                 .append("p")
-                .attr("id": "wage_note")
+                .attr("id", "wage_note")
                 .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
         };
 
