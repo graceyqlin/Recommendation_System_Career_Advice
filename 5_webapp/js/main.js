@@ -38,11 +38,16 @@ $(function() {
             .selectAll("h3")
             .data(grouped)
             .html(function(d) { return d.values[0].question_body; });
-            // .enter()
-            // .append("div")
-            // .enter()
-            // .append("p")
-            // .html(function(d) { return d.answers; });
+        q_a
+            .selectAll("div")
+            .html(function(d) {
+                this
+                    .selectAll("p")
+                    .data(d)
+                    .enter()
+                    .append("p")
+                    .html(function(d) { return d.values.answers; });
+            });
     };
 
     function dashboard(data) {
