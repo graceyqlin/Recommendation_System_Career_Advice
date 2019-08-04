@@ -42,14 +42,13 @@ $(function() {
             .selectAll("div")
             .data(grouped)
             .html(function(d) { 
-                console.log(d);
                 out = "";
                 for (i=0; i<d.values.length; i++){
-                    out = out + "<p>Answer" + (i+1) + ":<br>" + d.values[i].answers + "</p>";
+                    out = out + "<p><i>Answer " + (i+1) + ":</i><br>" + d.values[i].answers + "</p>";
                 };
-                // console.log(out);
                 return out; 
-            });
+            })
+            .style("height": function(d) { return 100*d.values.length + "px" });
     };
 
     function dashboard(data) {
