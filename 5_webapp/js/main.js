@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 500,
-        margin = {top: 10, right: 10, bottom: 60, left: 175},
+        margin = {top: 10, right: 60, bottom: 50, left: 175},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -91,6 +91,8 @@ $(function() {
                 .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
         };
 
+        // Boxplots
+
         // Show the Y scale
         var y = d3.scaleBand()
             .range([figheight, margin.bottom])
@@ -123,12 +125,12 @@ $(function() {
             .data(data)
             .enter()
             .append("line")
-              .attr("y1", function(d){ return y(d.occupation) })
-              .attr("y2", function(d){ return y(d.occupation) })
-              .attr("x1", function(d){ return x(d.hourly_10) })
-              .attr("x2", function(d){ return x(d.hourly_90) })
-              .attr("stroke", "black")
-              .style("width", 40)
+            .attr("y1", function(d){ return y(d.occupation) })
+            .attr("y2", function(d){ return y(d.occupation) })
+            .attr("x1", function(d){ return x(d.hourly_10) })
+            .attr("x2", function(d){ return x(d.hourly_90) })
+            .attr("stroke", "black")
+            .style("width", 40)
 
         // rectangle for the main box
         var boxHeight = figheight / (data.length + 2)
@@ -137,12 +139,12 @@ $(function() {
             .data(data)
             .enter()
             .append("rect")
-                .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
-                .attr("x", function(d){ return x(d.hourly_25) })
-                .attr("width", function(d){ return x(d.hourly_75)-x(d.hourly_25) })
-                .attr("height", boxHeight )
-                .attr("stroke", "black")
-                .style("fill", "steelblue")
+            .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
+            .attr("x", function(d){ return x(d.hourly_25) })
+            .attr("width", function(d){ return x(d.hourly_75)-x(d.hourly_25) })
+            .attr("height", boxHeight )
+            .attr("stroke", "black")
+            .style("fill", "steelblue")
 
         // Show the median
         svg
@@ -150,12 +152,31 @@ $(function() {
             .data(data)
             .enter()
             .append("line")
-              .attr("y1", function(d){ return y(d.occupation)-boxHeight/2 })
-              .attr("y2", function(d){ return y(d.occupation)+boxHeight/2 })
-              .attr("x1", function(d){ return x(d.hourly_med) })
-              .attr("x2", function(d){ return x(d.hourly_med) })
-              .attr("stroke", "black")
-              .style("width", 80)
+            .attr("y1", function(d){ return y(d.occupation)-boxHeight/2 })
+            .attr("y2", function(d){ return y(d.occupation)+boxHeight/2 })
+            .attr("x1", function(d){ return x(d.hourly_med) })
+            .attr("x2", function(d){ return x(d.hourly_med) })
+            .attr("stroke", "black")
+            .style("width", 80)
+
+        // Employment bubble plot
+        var size = d3.scalePow()
+            .domain([d3.min(data, function (d) { return d.employment }), 
+                     d3.max(data, function (d) { return d.employment })])
+            .range([5,(margin.right-5)])
+            .exponent(2);
+        svg
+            .selectAll("bubbles")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("r", function(d){ return size(d.employment) })
+            .attr("cy", function(d){ return y(d.occupation) })
+            .attr("cx", margin.left+figwidth+margin.right/2)
+            // .attr("transform",
+            //       "translate(" + (margin.left+figwidth+margin.right/2) + "," + (function(d){ return y(d.occupation) }) + ")")
+            .attr("stroke", "black")
+            .style("fill", "steelblue");
     };
 
     // Set up jquery ui widgets
