@@ -30,17 +30,18 @@ $(function() {
     };
 
     function format_qa_output(data){
+        var grouped = d3.nest()
+            .key(function(d) { return d.question_id; })
+            .entries(data);
         q_a
             .selectAll("h3")
             .data(data)
-            .enter()
-            .append("h3")
-            .html(function(d) { return d.question_body; })
-            .enter()
-            .append("div")
-            .enter()
-            .append("p")
-            .html(function(d) { return d.answers; });
+            .html(function(d) { return d.values.question_body; })
+            // .enter()
+            // .append("div")
+            // .enter()
+            // .append("p")
+            // .html(function(d) { return d.answers; });
     };
 
     function dashboard(data) {
