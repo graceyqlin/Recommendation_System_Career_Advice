@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 500,
-        margin = {top: 10, right: 60, bottom: 50, left: 175},
+        margin = {top: 10, right: 100, bottom: 50, left: 175},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -163,7 +163,7 @@ $(function() {
         var size = d3.scalePow()
             .domain([d3.min(data, function (d) { return d.employment }), 
                      d3.max(data, function (d) { return d.employment })])
-            .range([5,(margin.right-5)])
+            .range([5,(margin.right-10)/2])
             .exponent(2);
         svg
             .selectAll("bubbles")
@@ -173,10 +173,26 @@ $(function() {
             .attr("r", function(d){ return size(d.employment) })
             .attr("cy", function(d){ return y(d.occupation) })
             .attr("cx", margin.left+figwidth+margin.right/2)
-            // .attr("transform",
-            //       "translate(" + (margin.left+figwidth+margin.right/2) + "," + (function(d){ return y(d.occupation) }) + ")")
             .attr("stroke", "black")
-            .style("fill", "steelblue");
+            .style("fill", "steelblue")
+            .style("opacity", 0.5);
+        svg
+            .selectAll("bubblelabels")
+            .data(data)
+            .enter()
+            .append("text")             
+            .attr("transform", function(d) {
+                return "translate(" + (margin.left+figwidth+margin.right/2) + "," + y(d.occupation) + ")"
+            })
+            .style("text-anchor", "middle")
+            .style("font-size", 10)
+            .text(function(d) { return d.employment });
+        svg.append("text")             
+            .attr("transform",
+                  "translate(" + (margin.left+figwidth+margin.right/2) + "," + (height - margin.bottom + 20) + ")")
+            .style("text-anchor", "middle")
+            .style("font-size", 10)
+            .text("Total Employment (Thousands)");
     };
 
     // Set up jquery ui widgets
