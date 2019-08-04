@@ -79,65 +79,65 @@ $(function() {
 
     function dashboard(data) {
 
-      // Going to need null handling soon
-        console.log(data);
+        // console.log(data);
         var f = fill_null(data);
         if (f) {
             d3.select("#stats")
                 .append("p")
                 .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
         };
-        console.log(data);
+        // console.log(data);
 
         svg.selectAll("*").remove();
 
-        // Show the X scale
-        var x = d3.scaleBand()
-            .range([ margin.left, figwidth ])
+        // Show the Y scale
+        var y = d3.scaleBand()
+            .range([figheight, margin.bottom])
             .domain(d3.map(data, function (d) { return d.occupation; }).keys())
             .paddingInner(1)
             .paddingOuter(.5);
         svg.append("g")
-            .attr("transform", "translate(0," + figheight + ")")
-            .call(d3.axisBottom(x))
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .call(d3.axisLeft(x))
             .selectAll("text")  
             .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em")
-            .attr("transform", "rotate(-45)");
+            // .attr("dx", "-.8em")
+            // .attr("dy", ".15em")
+            // .attr("transform", "rotate(-45)")
+            ;
 
-        // Show the Y scale
-        var y = d3.scaleLinear()
+        // Show the X scale
+        var x = d3.scaleLinear()
             .domain([0, d3.max(data , function (d) { return d.hourly_90 }) + 5])
-            .range([figheight, margin.bottom])
+            .range([[ margin.left, figwidth ])
         svg.append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .call(d3.axisLeft(y));
+            .attr("transform", "translate(0," + figheight + ")")
+            .call(d3.axisBottom(x));
 
-        // Show the main vertical line
+        // Show the main horizontal line
         svg
-            .selectAll("vertLines")
+            .selectAll("horLines")
             .data(data)
             .enter()
             .append("line")
-              .attr("x1", function(d){ return x(d.occupation) })
-              .attr("x2", function(d){ return x(d.occupation) })
-              .attr("y1", function(d){ return y(d.hourly_10) })
-              .attr("y2", function(d){ return y(d.hourly_90) })
+              .attr("y1", function(d){ return y(d.occupation) })
+              .attr("y2", function(d){ return y(d.occupation) })
+              .attr("x1", function(d){ return x(d.hourly_10) })
+              .attr("x2", function(d){ return x(d.hourly_90) })
               .attr("stroke", "black")
               .style("width", 40)
 
         // rectangle for the main box
-        var boxWidth = figwidth / (data.length + 2)
+        var boxHeight = figheight / (data.length + 2)
         svg
             .selectAll("boxes")
             .data(data)
             .enter()
             .append("rect")
-                .attr("x", function(d){ return x(d.occupation)-boxWidth/2 })
-                .attr("y", function(d){ return y(d.hourly_75) })
-                .attr("height", function(d){ return y(d.hourly_25)-y(d.hourly_75) })
-                .attr("width", boxWidth )
+                .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
+                .attr("x", function(d){ return x(d.hourly_75) })
+                .attr("width", function(d){ return x(d.hourly_25)-x(d.hourly_75) })
+                .attr("height", boxHeight )
                 .attr("stroke", "black")
                 .style("fill", "steelblue")
 
@@ -147,10 +147,10 @@ $(function() {
             .data(data)
             .enter()
             .append("line")
-              .attr("x1", function(d){ return x(d.occupation)-boxWidth/2 })
-              .attr("x2", function(d){ return x(d.occupation)+boxWidth/2 })
-              .attr("y1", function(d){ return y(d.hourly_med) })
-              .attr("y2", function(d){ return y(d.hourly_med) })
+              .attr("y1", function(d){ return y(d.occupation)-boxHeight/2 })
+              .attr("y2", function(d){ return y(d.occupation)+boxHeight/2 })
+              .attr("x1", function(d){ return x(d.hourly_med) })
+              .attr("x2", function(d){ return x(d.hourly_med) })
               .attr("stroke", "black")
               .style("width", 80)
     };
