@@ -31,6 +31,7 @@ $(function() {
 
     function format_qa_output(data){
         accordion
+            .selectAll("h3")
             .data(data)
             .enter()
             .append("h3")
