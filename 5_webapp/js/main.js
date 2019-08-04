@@ -145,6 +145,7 @@ $(function() {
             .attr("height", boxHeight )
             .attr("stroke", "black")
             .style("fill", "steelblue")
+            .style("opacity", 0.5);
 
         // Show the median
         svg
@@ -160,11 +161,10 @@ $(function() {
             .style("width", 80)
 
         // Employment bubble plot
-        var size = d3.scalePow()
+        var size = d3.scaleLinear()
             .domain([d3.min(data, function (d) { return d.employment }), 
                      d3.max(data, function (d) { return d.employment })])
-            .range([5,(margin.right-10)/2])
-            .exponent(2);
+            .range([5,(margin.right-10)/2]);
         svg
             .selectAll("bubbles")
             .data(data)
@@ -182,7 +182,7 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (margin.left+figwidth+margin.right/2) + "," + y(d.occupation) + ")"
+                return "translate(" + (margin.left+figwidth+margin.right/2) + "," + (y(d.occupation)-5) + ")"
             })
             .style("text-anchor", "middle")
             .style("font-size", 10)
