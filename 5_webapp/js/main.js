@@ -109,7 +109,7 @@ $(function() {
         // Show the X scale
         var x = d3.scaleLinear()
             .domain([0, d3.max(data , function (d) { return d.hourly_90 }) + 5])
-            .range([[ margin.left, figwidth ])
+            .range([ margin.left, figwidth ])
         svg.append("g")
             .attr("transform", "translate(0," + figheight + ")")
             .call(d3.axisBottom(x));
