@@ -171,8 +171,10 @@ $(function() {
             .enter()
             .append("circle")
             .attr("r", function(d){ return size(d.employment) })
-            .attr("y", function(d){ return y(d.occupation) })
-            .attr("x", margin.left+figwidth+margin.right/2)
+            // .attr("y", function(d){ return y(d.occupation) })
+            // .attr("x", margin.left+figwidth+margin.right/2)
+            .attr("transform",
+                  "translate(" + (margin.left+figwidth+margin.right/2) + "," + (function(d){ return y(d.occupation) }) + ")")
             .attr("stroke", "black")
             .style("fill", "steelblue");
     };
