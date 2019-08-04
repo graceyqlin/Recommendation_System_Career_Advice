@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 500,
-        margin = {top: 10, right: 50, bottom: 60, left: 175},
+        margin = {top: 10, right: 60, bottom: 50, left: 175},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -162,7 +162,7 @@ $(function() {
         // Employment bubble plot
         var size = d3.scalePow()
             .domain([d3.min(data, function (d) { return d.employment }), 
-                     d3.max(data, function (d) { return dd.employment })])
+                     d3.max(data, function (d) { return d.employment })])
             .range([5,(margin.right-5)])
             .exponent(2);
         svg
