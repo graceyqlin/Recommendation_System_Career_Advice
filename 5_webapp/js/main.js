@@ -32,23 +32,23 @@ $(function() {
     function fill_null(d) {
         var filled = false;
         for (i=0; i<d.length; i++){
-            if (d[i].hourly_90 === null) { 
+            if (!d[i].hourly_90) { 
                 d[i].hourly_90 = 100;
                 filled = true;
             };
-            if (d[i].hourly_75 === null) { 
+            if (!d[i].hourly_75) { 
                 d[i].hourly_75 = 100;
                 filled = true;
             };
-            if (d[i].hourly_med === null) { 
+            if (!d[i].hourly_med) { 
                 d[i].hourly_med = 100;
                 filled = true;
             };
-            if (d[i].hourly_25 === null) { 
+            if (!d[i].hourly_25) { 
                 d[i].hourly_25 = 100;
                 filled = true;
             };
-            if (d[i].hourly_10 === null) { 
+            if (!d[i].hourly_10) { 
                 d[i].hourly_10 = 100;
                 filled = true;
             };
