@@ -5,7 +5,8 @@ from flask_cors import CORS
 
 sys.path.insert(1, '/home/final/pointer-generator-master/model_generator_files')
 import capstone_recommendation as rec
-import RunOneSummary as summary
+import RunOneSummary as summ
+import get_oes_data as oes
 
 app = Flask(__name__)
 CORS(app)
@@ -16,8 +17,13 @@ def root():
     query = request.values['userinput']
     q_df = rec.find_similar_questions(query)
     ans = ' || '.join(q_df.answers.values.tolist())
-    result = summary.run_example_summary(ans)
-    response = jsonify({'result': result})
+    summary = summ.run_example_summary(ans)
+    stats = oes.get_cluster_data(q_df.closest_pathway.iloc[0])
+    response = jsonify({
+        'summary': summary,
+        'questions': [x for x in q_df.T.to_dict().values()],
+        'stats': stats
+    })
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 

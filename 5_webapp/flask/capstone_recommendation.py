@@ -51,18 +51,20 @@ def find_similar_questions(question_body):
     similar_inds = scores.argsort()[0][-6:-1]
     similar_qs = pd.DataFrame([questions[i] for i in similar_inds], columns = {'questions_body_clean'})
     similar_q_join = pd.merge(left = similar_qs, right = questions_df, on ='questions_body_clean', how='inner')
-    out = similar_q_join[['questions_id','questions_body_clean','answers_score','answers_body_clean']]
+    out = similar_q_join[['questions_id','questions_body_clean','answers_score','answers_body_clean']].copy()
     
     # now find the most similar BLS occupation name
     occ_scores = cosine_similarity(x, occ_matrix)
     best_ind = occ_scores.argsort()[0][-1]
     best_occ = occupations[best_ind]
-    # get the corresponding SOC code for that job
+    # get the corresponding SOC code and career pathway for that job
+    occ_path = occ_df.loc[occ_df['Occupation'] == best_occ,'Pathway'].iloc[0]
     occ_soc = occ_df.loc[occ_df['Occupation'] == best_occ,'Cod'].iloc[0]
         
     # add the input question, closest occupation and occupation SOC code to the output
     out['input_question_body']=question_body
     out['closest_occupation'] = best_occ
+    out['closest_pathway'] = occ_path
     out['soc_code'] = str(occ_soc)
     
     # rename some columns
