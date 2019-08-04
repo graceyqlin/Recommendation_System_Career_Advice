@@ -168,6 +168,7 @@ $(function() {
                 url: flask_ip, 
                 data: {userinput: v}, 
                 success: function(data, status) {
+                    console.log(data);
                     summary.html(data.summary);
                     format_qa_output(data.questions);
                     dashboard(data.stats);
