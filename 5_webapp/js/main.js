@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 500,
-        margin = {top: 10, right: 10, bottom: 50, left: 175, middle: 10},
+        margin = {top: 10, right: 10, bottom: 50, left: 175, center: 10},
         figwidth = (width - margin.left - margin.right - margin.center) / 2,
         figheight = height - margin.top - margin.bottom;
 
@@ -168,7 +168,7 @@ $(function() {
             .domain([1, d3.max(data, function (d) { return d.employment*1000 })])
             .range([0,figwidth]);  
         svg.append("g")
-            .attr("transform", "translate(" + (margin.left+figwidth+margincenter) + "," + figheight + ")")
+            .attr("transform", "translate(" + (margin.left+figwidth+margin.center) + "," + figheight + ")")
             .call(d3.axisBottom(x2));
         console.log(x2(data[0].employment*1000));
         svg
@@ -177,7 +177,7 @@ $(function() {
             .enter()
             .append("rect")
             .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
-            .attr("x", margin.left+figwidth+margincenter)
+            .attr("x", margin.left+figwidth+margin.center)
             .attr("width", function(d){ return x2(d.employment*1000) })
             .attr("height", boxHeight )
             .attr("stroke", "black")
