@@ -3,10 +3,10 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 400,
-        margin = {top: 10, right: 10, bottom: 50, left: 100, center: 10},
+        margin = {top: 10, right: 10, bottom: 50, left: 150, center: 10},
         figwidth = (width - margin.left - margin.right - margin.center) / 2,
         figheight = height - margin.top - margin.bottom,
-        minbarheight = 40;
+        minbarheight = 30;
 
     var flask_ip = 'http://35.225.248.118:5001/'
 
@@ -124,6 +124,7 @@ $(function() {
         for (i==0; i<data.length; i++){
             data[i]["employment_exp"] = data[i].employment*(1+(data[i].empl_chng_pct/100));
         };
+        console.log(data);
 
         // Boxplots
 
