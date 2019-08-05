@@ -189,7 +189,7 @@ $(function() {
             .data(data)
             .enter()
             .append("rect")
-            .attr("y", function(d){ return y(d.occupation)-(1*boxHeight/4 })
+            .attr("y", function(d){ return y(d.occupation)-(1*boxHeight/4) })
             .attr("x", margin.left+figwidth+margin.center)
             .attr("width", function(d){ return x2(d.employment*(d.empl_chng_pct/100)*1000) })
             .attr("height", boxHeight/2 )
