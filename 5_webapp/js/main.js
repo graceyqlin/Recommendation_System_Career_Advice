@@ -165,11 +165,12 @@ $(function() {
         //         , d3.max(data, function (d) { return d.employment })])
         //     .range([5,(margin.right-10)/2]);
         var x2 = d3.scaleLog()
-            .domain([1, d3.max(data, function (d) { return d.employment })])
+            .domain([1, d3.max(data, function (d) { return d.employment*1000 })])
             .range([width-margin.right,width]);  
         svg.append("g")
             .attr("transform", "translate(" + (width-margin.right) + "," + figheight + ")")
             .call(d3.axisBottom(x2));
+        console.log(x2(data[0].employment*1000));
         svg
             .selectAll("bars")
             .data(data)
@@ -177,7 +178,7 @@ $(function() {
             .append("rect")
             .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
             .attr("x", width-margin.right)
-            .attr("width", function(d){ return x2(d.employment) })
+            .attr("width", function(d){ return x2(d.employment*1000) })
             .attr("height", boxHeight )
             .attr("stroke", "black")
             .style("fill", "steelblue");
@@ -208,7 +209,7 @@ $(function() {
                   "translate(" + (margin.left+figwidth+margin.right/2) + "," + (height - margin.bottom + 20) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
-            .text("2018 Employment (Thousands)");
+            .text("2018 Employment");
     };
 
     // Set up jquery ui widgets
