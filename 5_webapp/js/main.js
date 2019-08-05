@@ -143,7 +143,7 @@ $(function() {
             .attr("x", function(d){ return x(d.hourly_25) })
             .attr("width", function(d){ return x(d.hourly_75)-x(d.hourly_25) })
             .attr("height", boxHeight )
-            .attr("stroke", "black")
+            //.attr("stroke", "black")
             .style("fill", "steelblue");
 
         // Show the median
@@ -166,7 +166,8 @@ $(function() {
         //     .range([5,(margin.right-10)/2]);
         var x2 = d3.scaleLog()
             .domain([1, d3.max(data, function (d) { return d.employment*1000 })])
-            .range([0,figwidth]);  
+            .range([0,figwidth])
+            .tickFormat(5, "s");  
         svg.append("g")
             .attr("transform", "translate(" + (margin.left+figwidth+margin.center) + "," + figheight + ")")
             .call(d3.axisBottom(x2));
@@ -180,7 +181,7 @@ $(function() {
             .attr("x", margin.left+figwidth+margin.center)
             .attr("width", function(d){ return x2(d.employment*1000) })
             .attr("height", boxHeight )
-            .attr("stroke", "black")
+            //.attr("stroke", "black")
             .style("fill", "steelblue");
         // svg
         //     .selectAll("bubbles")
