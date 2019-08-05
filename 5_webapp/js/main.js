@@ -175,6 +175,12 @@ $(function() {
                 //.tickFormat(d3.format("s"))
             );
         //console.log(x2(data[0].employment*1000));
+        function lbl_loc(v) {
+            return v > 75: v/2 : v;
+        };
+        function lbl_anchr(v) {
+            return v > 75: "middle" : "start";
+        };
         svg
             .selectAll("bars2018")
             .data(data)
@@ -205,9 +211,9 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (barstart+x2(d.employment)/2) + "," + (y(d.occupation)-boxHeight/4) + ")"
+                return "translate(" + (barstart+lbl_loc(x2(d.employment)) + "," + (y(d.occupation)-boxHeight/4-2.5) + ")"
             })
-            .style("text-anchor", "middle")
+            .style("text-anchor", function(d) {return lbl_anchr(x2(d.employment))})
             .style("font-size", 10)
             .text("2018");
         svg
@@ -216,9 +222,9 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (barstart+x2(d.employment*(1+(d.empl_chng_pct/100)))/2) + "," + (y(d.occupation)+boxHeight/4) + ")"
+                return "translate(" + (barstart+lbl_loc(x2(d.employment*(1+(d.empl_chng_pct/100)))) + "," + (y(d.occupation)+boxHeight/4-2.5) + ")"
             })
-            .style("text-anchor", "middle")
+            .style("text-anchor", function(d) {return lbl_anchr(x2(d.employment*(1+(d.empl_chng_pct/100)))})
             .style("font-size", 10)
             .text("2026 (Expected)");
         // svg
