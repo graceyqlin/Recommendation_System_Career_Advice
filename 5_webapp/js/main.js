@@ -261,6 +261,8 @@ $(function() {
     $( "#tabs" ).tabs();
     $( "#accordion" ).accordion();
     $( "#progressbar" ).progressbar({ value : false });
+    $( ".progress-label" );
+    $( "#effect" ).toggle( "blind", 500 );
 
     var button = d3.select("#button")
         .on("click", function() {
@@ -278,9 +280,10 @@ $(function() {
                     summary.html(data.summary);
                     format_qa_output(data.questions);
                     dashboard(data.stats);
+                    $( "#effect" ).toggle( "blind", 500 );
                 }
             })
-            $( "#effect" ).toggle( "blind", 500 );
+
         });
 
 });
