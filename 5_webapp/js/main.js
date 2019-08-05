@@ -103,6 +103,14 @@ $(function() {
             .style("height", function(d) { return 100*d.values.length + "px" });
     };
 
+    function label_stats(occ, path) {
+        h = "<strong>Your question seems to relate to the " + occ
+        h += " occupation. Here's some information about wages, employment, qualifications for that job"
+        h += " and others in the " + path + "career pathway:</strong>"
+        d3.select("#stats-label")
+            .html(h);
+    };
+
     function dashboard(data) {
 
         // Set figure height based on number of occupations returned
@@ -120,7 +128,7 @@ $(function() {
                 .append("p")
                 .attr("id", "wage_note")
                 .style("font-size", 10)
-                .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
+                .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr, so here those values are plotted at $100/hr.")
         };
         for (i=0; i<data.length; i++){
             data[i].employment_exp = data[i].employment*(1+(data[i].empl_chng_pct/100));
@@ -291,6 +299,7 @@ $(function() {
                     console.log(data);
                     summary.html(data.summary);
                     format_qa_output(data.questions);
+                    label_stats(data.questions[0].closest_occupation, data.questions[0].closest_pathway);
                     dashboard(data.stats);
                     $( "#effect" ).toggle( "blind", 500 );
                 }
