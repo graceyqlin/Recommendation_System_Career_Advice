@@ -167,10 +167,10 @@ $(function() {
         //         , d3.max(data, function (d) { return d.employment })])
         //     .range([5,(margin.right-10)/2]);
         var x2 = d3.scaleLinear()
-            .domain([1, d3.max(data, function (d) { return d.employment*(d.empl_chng_pct/100) })])
+            .domain([1, d3.max(data, function (d) { return d.employment*(1+(d.empl_chng_pct/100)) })])
             .range([0,figwidth]);  
         svg.append("g")
-            .attr("transform", "translate(" + (barstart) + "," + figheight + ")")
+            .attr("transform", "translate(" + barstart + "," + figheight + ")")
             .call(d3.axisBottom(x2)
                 //.tickFormat(d3.format("s"))
             );
@@ -192,9 +192,9 @@ $(function() {
             .data(data)
             .enter()
             .append("rect")
-            .attr("y", function(d){ return y(d.occupation)+(boxHeight/2) })
+            .attr("y", function(d){ return y(d.occupation) })
             .attr("x", barstart)
-            .attr("width", function(d){ return x2(d.employment*(d.empl_chng_pct/100)) })
+            .attr("width", function(d){ return x2(d.employment*(1+(d.empl_chng_pct/100))) })
             .attr("height", boxHeight/2 )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
@@ -216,7 +216,7 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (barstart+x2(d.employment*(d.empl_chng_pct/100))/2) + "," + (y(d.occupation)+boxHeight/4) + ")"
+                return "translate(" + (barstart+x2(d.employment*(1+(d.empl_chng_pct/100)))/2) + "," + (y(d.occupation)+boxHeight/4) + ")"
             })
             .style("text-anchor", "middle")
             .style("font-size", 10)
