@@ -167,7 +167,7 @@ $(function() {
         //         , d3.max(data, function (d) { return d.employment })])
         //     .range([5,(margin.right-10)/2]);
         var x2 = d3.scaleLinear()
-            .domain([1, d3.max(data, function (d) { return d.employment*(d.empl_chng_pct/100)*1000 })])
+            .domain([1, d3.max(data, function (d) { return d.employment*(d.empl_chng_pct/100) })])
             .range([0,figwidth]);  
         svg.append("g")
             .attr("transform", "translate(" + (barstart) + "," + figheight + ")")
@@ -180,9 +180,9 @@ $(function() {
             .data(data)
             .enter()
             .append("rect")
-            .attr("y", function(d){ return y(d.occupation)-boxHeight })
+            .attr("y", function(d){ return y(d.occupation)-(boxHeight/2) })
             .attr("x", barstart)
-            .attr("width", function(d){ return x2(d.employment*1000) })
+            .attr("width", function(d){ return x2(d.employment) })
             .attr("height", boxHeight/2 )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
@@ -192,9 +192,9 @@ $(function() {
             .data(data)
             .enter()
             .append("rect")
-            .attr("y", function(d){ return y(d.occupation)-(boxHeight/2) })
+            .attr("y", function(d){ return y(d.occupation)+(boxHeight/2) })
             .attr("x", barstart)
-            .attr("width", function(d){ return x2(d.employment*(d.empl_chng_pct/100)*1000) })
+            .attr("width", function(d){ return x2(d.employment*(d.empl_chng_pct/100)) })
             .attr("height", boxHeight/2 )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
@@ -205,7 +205,7 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (barstart+x2(d.employment*1000)/2) + "," + (y(d.occupation)-boxHeight*0.75) + ")"
+                return "translate(" + (barstart+x2(d.employment)/2) + "," + (y(d.occupation)-boxHeight/4) + ")"
             })
             .style("text-anchor", "middle")
             .style("font-size", 10)
@@ -216,7 +216,7 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (barstart+x2(d.employment*(d.empl_chng_pct/100)*1000)/2) + "," + (y(d.occupation)-boxHeight*0.25) + ")"
+                return "translate(" + (barstart+x2(d.employment*(d.empl_chng_pct/100))/2) + "," + (y(d.occupation)+boxHeight/4) + ")"
             })
             .style("text-anchor", "middle")
             .style("font-size", 10)
@@ -248,7 +248,7 @@ $(function() {
                   "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (height-margin.bottom+20) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
-            .text("2018 Employment");
+            .text("Employment, Thousands of Workers");
     };
 
     // Set up jquery ui widgets
