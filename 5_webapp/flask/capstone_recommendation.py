@@ -21,7 +21,21 @@ query2 = '''SELECT * FROM career_clusters'''
 occ_df = pd.read_sql(query2, connection)
 
 # get just the occupation names
-occupations = occ_df['Occupation'].to_list()
+occ_raw = occ_df['Occupation'].to_list()
+
+# new list occupations will convert plural occupations to singular
+occupations = []
+for occ in occ_raw:
+    occ_new=[]
+    for word in occ.split(' '):
+        if word[-1]=='s':
+            occ_new.append(word[:-1])
+        else:
+            occ_new.append(word)
+    occupations.append(' '.join(word for word in occ_new))
+
+# add this new column to the original df
+occ_df['Occupation_clean']=occupations
 
 # split up question dataset
 questions_ids = list(data.questions_id.unique())
@@ -43,7 +57,7 @@ def find_answers(q_id):
 def find_similar_questions(question_body):
     
     # remove punctuation from input question and make lower-case
-    question_body_clean = ''.join(s for s in question_body if s not in string.punctuation).lower()
+    question_body_clean = question_body.lower().translate(str.maketrans('', '', string.punctuation))
     
     # vectorize input question
     x = vec.transform([question_body_clean]).todense()
@@ -53,20 +67,19 @@ def find_similar_questions(question_body):
     similar_inds = scores.argsort()[0][-6:-1]
     similar_qs = pd.DataFrame([questions[i] for i in similar_inds], columns = {'questions_body_clean'})
     similar_q_join = pd.merge(left = similar_qs, right = questions_df, on ='questions_body_clean', how='inner')
-    out = similar_q_join[['questions_id','questions_body_clean','answers_score','answers_body_clean']].copy()
+    out = similar_q_join[['questions_id','questions_body_clean','answers_score','answers_body_clean']]
     
     # now find the most similar BLS occupation name
     occ_scores = cosine_similarity(x, occ_matrix)
     best_ind = occ_scores.argsort()[0][-1]
     best_occ = occupations[best_ind]
-    # get the corresponding SOC code and career pathway for that job
-    occ_path = occ_df.loc[occ_df['Occupation'] == best_occ,'Pathway'].iloc[0]
-    occ_soc = occ_df.loc[occ_df['Occupation'] == best_occ,'Cod'].iloc[0]
+    print(best_occ)
+    # get the corresponding SOC code for that job
+    occ_soc = occ_df.loc[occ_df['Occupation_clean'] == best_occ,'Code'].iloc[0]
         
     # add the input question, closest occupation and occupation SOC code to the output
     out['input_question_body']=question_body
     out['closest_occupation'] = best_occ
-    out['closest_pathway'] = occ_path
     out['soc_code'] = str(occ_soc)
     
     # rename some columns
@@ -74,4 +87,3 @@ def find_similar_questions(question_body):
                         'answers_body_clean':'answers'})
     
     return out
-    
