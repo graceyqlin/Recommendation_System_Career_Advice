@@ -176,7 +176,7 @@ $(function() {
             );
         //console.log(x2(data[0].employment*1000));
         function lbl_loc(v) {
-            return v > 75 ? v/2 : v;
+            return v > 75 ? v/2 : v+2;
         };
         function lbl_anchr(v) {
             return v > 75 ? "middle" : "start";
@@ -260,10 +260,12 @@ $(function() {
     // Set up jquery ui widgets
     $( "#tabs" ).tabs();
     $( "#accordion" ).accordion();
+    $( "#progressbar" ).progressbar({ value : false });
 
     var button = d3.select("#button")
         .on("click", function() {
             var v = query.property("value");
+            $( "#effect" ).toggle( "blind", 500 );
             $.ajax({
                 beforeSend: function(req){
                     req.setRequestHeader("Access-Control-Allow-Origin","*");
@@ -278,6 +280,7 @@ $(function() {
                     dashboard(data.stats);
                 }
             })
+            $( "#effect" ).toggle( "blind", 500 );
         });
 
 });
