@@ -122,7 +122,7 @@ $(function() {
                 .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
         };
         for (i==0; i<data.length; i++){
-            data[i]["employment_exp"] = data[i].employment*(1+(data[i].empl_chng_pct/100));
+            data[i].employment_exp = data[i].employment*(1+(data[i].empl_chng_pct/100));
         };
         console.log(data);
 
@@ -138,7 +138,9 @@ $(function() {
             .attr("transform", "translate(" + margin.left + ",0)")
             .call(d3.axisLeft(y))
             .selectAll("text")  
-            .style("text-anchor", "end");
+            .style("text-anchor", "end")
+            .selectAll(".tick text")
+            .call(wrap, margin.left-5);
 
         // Show the X scale
         var x = d3.scaleLinear()
@@ -146,9 +148,7 @@ $(function() {
             .range([ margin.left, (margin.left+figwidth) ])
         svg.append("g")
             .attr("transform", "translate(0," + figheight + ")")
-            .call(d3.axisBottom(x))
-            .selectAll(".tick text")
-            .call(wrap, margin.left-5);
+            .call(d3.axisBottom(x));
         svg.append("text")             
             .attr("transform",
                   "translate(" + (margin.left + figwidth/2) + "," + (height - margin.bottom + 20) + ")")
