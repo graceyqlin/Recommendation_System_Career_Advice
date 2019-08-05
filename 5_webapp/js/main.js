@@ -143,7 +143,8 @@ $(function() {
             .attr("x", function(d){ return x(d.hourly_25) })
             .attr("width", function(d){ return x(d.hourly_75)-x(d.hourly_25) })
             .attr("height", boxHeight )
-            //.attr("stroke", "black")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
             .style("fill", "steelblue");
 
         // Show the median
@@ -160,6 +161,7 @@ $(function() {
             .style("width", 80)
 
         // Employment bubble plot
+        var barstart = margin.left+figwidth+margin.center;
         // var size = d3.scaleLinear()
         //     .domain([d3.min(data, function (d) { return d.employment })
         //         , d3.max(data, function (d) { return d.employment })])
@@ -168,7 +170,7 @@ $(function() {
             .domain([1, d3.max(data, function (d) { return d.employment*(d.empl_chng_pct/100)*1000 })])
             .range([0,figwidth]);  
         svg.append("g")
-            .attr("transform", "translate(" + (margin.left+figwidth+margin.center) + "," + figheight + ")")
+            .attr("transform", "translate(" + (barstart) + "," + figheight + ")")
             .call(d3.axisBottom(x2)
                 //.tickFormat(d3.format("s"))
             );
@@ -178,23 +180,47 @@ $(function() {
             .data(data)
             .enter()
             .append("rect")
-            .attr("y", function(d){ return y(d.occupation)-(3*boxHeight/4) })
-            .attr("x", margin.left+figwidth+margin.center)
+            .attr("y", function(d){ return y(d.occupation)-boxHeight })
+            .attr("x", barstart)
             .attr("width", function(d){ return x2(d.employment*1000) })
             .attr("height", boxHeight/2 )
-            //.attr("stroke", "black")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
             .style("fill", "steelblue");
         svg
             .selectAll("bars2026")
             .data(data)
             .enter()
             .append("rect")
-            .attr("y", function(d){ return y(d.occupation)-(1*boxHeight/4) })
-            .attr("x", margin.left+figwidth+margin.center)
+            .attr("y", function(d){ return y(d.occupation)-(boxHeight/2) })
+            .attr("x", barstart)
             .attr("width", function(d){ return x2(d.employment*(d.empl_chng_pct/100)*1000) })
             .attr("height", boxHeight/2 )
-            //.attr("stroke", "black")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
             .style("fill", "steelblue");
+        svg
+            .selectAll("barlabels2018")
+            .data(data)
+            .enter()
+            .append("text")             
+            .attr("transform", function(d) {
+                return "translate(" + (barstart+x2(d.employment*1000)/2) + "," + (y(d.occupation)-boxHeight*0.75) + ")"
+            })
+            .style("text-anchor", "middle")
+            .style("font-size", 10)
+            .text("2018");
+        svg
+            .selectAll("barlabels2026")
+            .data(data)
+            .enter()
+            .append("text")             
+            .attr("transform", function(d) {
+                return "translate(" + (barstart+x2(d.employment*(d.empl_chng_pct/100)*1000)/2) + "," + (y(d.occupation)-boxHeight*0.25) + ")"
+            })
+            .style("text-anchor", "middle")
+            .style("font-size", 10)
+            .text("2026 (Expected)");
         // svg
         //     .selectAll("bubbles")
         //     .data(data)
