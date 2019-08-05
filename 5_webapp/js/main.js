@@ -164,22 +164,35 @@ $(function() {
         //     .domain([d3.min(data, function (d) { return d.employment })
         //         , d3.max(data, function (d) { return d.employment })])
         //     .range([5,(margin.right-10)/2]);
-        var x2 = d3.scaleLog()
-            .domain([1, d3.max(data, function (d) { return d.employment*1000 })])
+        var x2 = d3.scaleLinear()
+            .domain([1, d3.max(data, function (d) { return d.employment*(d.empl_chng_pct/100)*1000 })])
             .range([0,figwidth]);  
         svg.append("g")
             .attr("transform", "translate(" + (margin.left+figwidth+margin.center) + "," + figheight + ")")
-            .call(d3.axisBottom(x2).tickFormat("s"));
-        console.log(x2(data[0].employment*1000));
+            .call(d3.axisBottom(x2)
+                //.tickFormat(d3.format("s"))
+            );
+        //console.log(x2(data[0].employment*1000));
         svg
-            .selectAll("bars")
+            .selectAll("bars2018")
             .data(data)
             .enter()
             .append("rect")
-            .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
+            .attr("y", function(d){ return y(d.occupation)-(3*boxHeight/4) })
             .attr("x", margin.left+figwidth+margin.center)
             .attr("width", function(d){ return x2(d.employment*1000) })
-            .attr("height", boxHeight )
+            .attr("height", boxHeight/2 )
+            //.attr("stroke", "black")
+            .style("fill", "steelblue");
+        svg
+            .selectAll("bars2026")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("y", function(d){ return y(d.occupation)-(1*boxHeight/4 })
+            .attr("x", margin.left+figwidth+margin.center)
+            .attr("width", function(d){ return x2(d.employment*(d.empl_chng_pct/100)*1000) })
+            .attr("height", boxHeight/2 )
             //.attr("stroke", "black")
             .style("fill", "steelblue");
         // svg
