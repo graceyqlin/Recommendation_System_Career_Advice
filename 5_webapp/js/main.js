@@ -68,7 +68,7 @@ $(function() {
                 lineHeight = 1.1, // ems
                 y = text.attr("y"),
                 dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+                tspan = text.text(null).append("tspan").attr("x", -5).attr("y", y).attr("dy", dy + "em");
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(" "));
@@ -76,7 +76,7 @@ $(function() {
                     line.pop();
                     tspan.text(line.join(" "));
                     line = [word];
-                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                    tspan = text.append("tspan").attr("x", -5).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
                 }
             }
         });
@@ -215,7 +215,7 @@ $(function() {
             .range([0,figwidth]);  
         svg.append("g")
             .attr("transform", "translate(" + barstart + "," + figheight + ")")
-            .call(d3.axisBottom(x2).tickFormat(d3.format("s")));
+            .call(d3.axisBottom(x2).tickFormat(d3.format(".0s")));
         function lbl_loc(v) {
             return v > 75 ? v/2 : v+2;
         };
