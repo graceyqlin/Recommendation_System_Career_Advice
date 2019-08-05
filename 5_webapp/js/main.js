@@ -169,7 +169,7 @@ $(function() {
             .range([0,figwidth]);  
         svg.append("g")
             .attr("transform", "translate(" + (margin.left+figwidth+margin.center) + "," + figheight + ")")
-            .call(d3.axisBottom(x2).tickFormat(5, "s"));
+            .call(d3.axisBottom(x2).tickFormat("s"));
         console.log(x2(data[0].employment*1000));
         svg
             .selectAll("bars")
