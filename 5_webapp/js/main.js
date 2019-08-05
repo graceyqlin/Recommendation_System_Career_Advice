@@ -3,8 +3,8 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 500,
-        margin = {top: 10, right: 300, bottom: 50, left: 175},
-        figwidth = width - margin.left - margin.right,
+        margin = {top: 10, right: 10, bottom: 50, left: 175, middle: 10},
+        figwidth = (width - margin.left - margin.right - margin.center) / 2,
         figheight = height - margin.top - margin.bottom;
 
     var flask_ip = 'http://35.225.248.118:5001/'
@@ -166,9 +166,9 @@ $(function() {
         //     .range([5,(margin.right-10)/2]);
         var x2 = d3.scaleLog()
             .domain([1, d3.max(data, function (d) { return d.employment*1000 })])
-            .range([width-margin.right,width]);  
+            .range([0,figwidth]);  
         svg.append("g")
-            .attr("transform", "translate(" + (width-margin.right) + "," + figheight + ")")
+            .attr("transform", "translate(" + (margin.left+figwidth+margincenter) + "," + figheight + ")")
             .call(d3.axisBottom(x2));
         console.log(x2(data[0].employment*1000));
         svg
@@ -177,7 +177,7 @@ $(function() {
             .enter()
             .append("rect")
             .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
-            .attr("x", width-margin.right)
+            .attr("x", margin.left+figwidth+margincenter)
             .attr("width", function(d){ return x2(d.employment*1000) })
             .attr("height", boxHeight )
             .attr("stroke", "black")
@@ -206,7 +206,7 @@ $(function() {
         //     .text(function(d) { return d.employment });
         svg.append("text")             
             .attr("transform",
-                  "translate(" + (margin.left+figwidth+margin.right/2) + "," + (height - margin.bottom + 20) + ")")
+                  "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (height-margin.bottom+20) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
             .text("2018 Employment");
