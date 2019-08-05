@@ -211,7 +211,7 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (barstart+lbl_loc(x2(d.employment))) + "," + (y(d.occupation)-boxHeight/4-2.5) + ")"
+                return "translate(" + (barstart+lbl_loc(x2(d.employment))) + "," + (y(d.occupation)-boxHeight/4+2.5) + ")"
             })
             .style("text-anchor", function(d) { return lbl_anchr(x2(d.employment)) })
             .style("font-size", 10)
@@ -222,7 +222,7 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (barstart+lbl_loc(x2(d.employment*(1+(d.empl_chng_pct/100))))) + "," + (y(d.occupation)+boxHeight/4-2.5) + ")"
+                return "translate(" + (barstart+lbl_loc(x2(d.employment*(1+(d.empl_chng_pct/100))))) + "," + (y(d.occupation)+boxHeight/4+2.5) + ")"
             })
             .style("text-anchor", function(d) { return lbl_anchr(x2(d.employment*(1+(d.empl_chng_pct/100)))) })
             .style("font-size", 10)
