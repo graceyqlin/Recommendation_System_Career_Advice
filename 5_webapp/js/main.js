@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 500,
-        margin = {top: 10, right: 100, bottom: 50, left: 175},
+        margin = {top: 10, right: 200, bottom: 50, left: 175},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -144,8 +144,7 @@ $(function() {
             .attr("width", function(d){ return x(d.hourly_75)-x(d.hourly_25) })
             .attr("height", boxHeight )
             .attr("stroke", "black")
-            .style("fill", "steelblue")
-            .style("opacity", 0.5);
+            .style("fill", "steelblue");
 
         // Show the median
         svg
@@ -161,32 +160,49 @@ $(function() {
             .style("width", 80)
 
         // Employment bubble plot
-        var size = d3.scaleLinear()
-            .domain([d3.min(data, function (d) { return d.employment }), 
-                     d3.max(data, function (d) { return d.employment })])
-            .range([5,(margin.right-10)/2]);
+        // var size = d3.scaleLinear()
+        //     .domain([d3.min(data, function (d) { return d.employment })
+        //         , d3.max(data, function (d) { return d.employment })])
+        //     .range([5,(margin.right-10)/2]);
+        var x2 = d3.scaleLog()
+            .domain([1, d3.max(data, function (d) { return d.empl_2026*1000 })])
+            .range([width-margin.right,width]);  
+        svg.append("g")
+            .attr("transform", "translate(" + (width-margin.right) + "," + figheight + ")")
+            .call(d3.axisBottom(x2));
         svg
-            .selectAll("bubbles")
+            .selectAll("bars")
             .data(data)
             .enter()
-            .append("circle")
-            .attr("r", function(d){ return size(d.employment) })
-            .attr("cy", function(d){ return y(d.occupation) })
-            .attr("cx", margin.left+figwidth+margin.right/2)
+            .append("rect")
+            .attr("y", function(d){ return y(d.occupation)-boxHeight/2 })
+            .attr("x", width-margin.right)
+            .attr("width", function(d){ return x2(d.employment) })
+            .attr("height", boxHeight )
             .attr("stroke", "black")
-            .style("fill", "steelblue")
-            .style("opacity", 0.5);
-        svg
-            .selectAll("bubblelabels")
-            .data(data)
-            .enter()
-            .append("text")             
-            .attr("transform", function(d) {
-                return "translate(" + (margin.left+figwidth+margin.right/2) + "," + (y(d.occupation)-5) + ")"
-            })
-            .style("text-anchor", "middle")
-            .style("font-size", 10)
-            .text(function(d) { return d.employment });
+            .style("fill", "steelblue");
+        // svg
+        //     .selectAll("bubbles")
+        //     .data(data)
+        //     .enter()
+        //     .append("circle")
+        //     .attr("r", function(d){ return size(d.employment) })
+        //     .attr("cy", function(d){ return y(d.occupation) })
+        //     .attr("cx", margin.left+figwidth+margin.right/2)
+        //     .attr("stroke", "black")
+        //     .style("fill", "steelblue")
+        //     .style("opacity", 0.5);
+        // svg
+        //     .selectAll("bubblelabels")
+        //     .data(data)
+        //     .enter()
+        //     .append("text")             
+        //     .attr("transform", function(d) {
+        //         return "translate(" + (margin.left+figwidth+margin.right/2) + "," + (y(d.occupation)+5) + ")"
+        //     })
+        //     .style("text-anchor", "middle")
+        //     .style("font-size", 10)
+        //     .text(function(d) { return d.employment });
         svg.append("text")             
             .attr("transform",
                   "translate(" + (margin.left+figwidth+margin.right/2) + "," + (height - margin.bottom + 20) + ")")
