@@ -215,7 +215,7 @@ $(function() {
             .range([0,figwidth]);  
         svg.append("g")
             .attr("transform", "translate(" + barstart + "," + figheight + ")")
-            .call(d3.axisBottom(x2));
+            .call(d3.axisBottom(x2).tickFormat(d3.format("s")));
         function lbl_loc(v) {
             return v > 75 ? v/2 : v+2;
         };
