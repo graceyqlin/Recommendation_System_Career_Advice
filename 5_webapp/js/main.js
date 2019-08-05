@@ -176,10 +176,10 @@ $(function() {
             );
         //console.log(x2(data[0].employment*1000));
         function lbl_loc(v) {
-            return v > 75: v/2 : v;
+            return v > 75 ? v/2 : v;
         };
         function lbl_anchr(v) {
-            return v > 75: "middle" : "start";
+            return v > 75 ? "middle" : "start";
         };
         svg
             .selectAll("bars2018")
