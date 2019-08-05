@@ -2,10 +2,11 @@ $(function() {
 
     // Set up globals
     var width = 950,
-        height = 500,
-        margin = {top: 10, right: 10, bottom: 50, left: 175, center: 10},
+        height = 400,
+        margin = {top: 10, right: 10, bottom: 50, left: 100, center: 10},
         figwidth = (width - margin.left - margin.right - margin.center) / 2,
-        figheight = height - margin.top - margin.bottom;
+        figheight = height - margin.top - margin.bottom,
+        minbarheight = 40;
 
     var flask_ip = 'http://35.225.248.118:5001/'
 
@@ -56,6 +57,31 @@ $(function() {
         return filled;
     };
 
+    function wrap(text, width) {
+        // https://bl.ocks.org/mbostock/7555321
+        text.each(function() {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                y = text.attr("y"),
+                dy = parseFloat(text.attr("dy")),
+                tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                }
+            }
+        });
+    }
+
     function format_qa_output(data){
         var grouped = d3.nest()
             .key(function(d) { return d.question_id; })
@@ -79,6 +105,11 @@ $(function() {
 
     function dashboard(data) {
 
+        // Set figure height based on number of occupations returned
+        var height = Math.max(400, margin.top+margin.bottom+(data.length*minbarheight)),
+            figheight = height - margin.top - margin.bottom;
+        svg.attr("height", height);
+
         svg.selectAll("*").remove();
         d3.selectAll("#wage_note").remove();
 
@@ -89,6 +120,9 @@ $(function() {
                 .attr("id", "wage_note")
                 .style("font-size", 10)
                 .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr.")
+        };
+        for (i==0; i<data.length; i++){
+            data[i]["employment_exp"] = data[i].employment*(1+(data[i].empl_chng_pct/100));
         };
 
         // Boxplots
@@ -111,7 +145,9 @@ $(function() {
             .range([ margin.left, (margin.left+figwidth) ])
         svg.append("g")
             .attr("transform", "translate(0," + figheight + ")")
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x))
+            .selectAll(".tick text")
+            .call(wrap, margin.left-5);
         svg.append("text")             
             .attr("transform",
                   "translate(" + (margin.left + figwidth/2) + "," + (height - margin.bottom + 20) + ")")
@@ -162,19 +198,12 @@ $(function() {
 
         // Employment bubble plot
         var barstart = margin.left+figwidth+margin.center;
-        // var size = d3.scaleLinear()
-        //     .domain([d3.min(data, function (d) { return d.employment })
-        //         , d3.max(data, function (d) { return d.employment })])
-        //     .range([5,(margin.right-10)/2]);
         var x2 = d3.scaleLinear()
-            .domain([1, d3.max(data, function (d) { return d.employment*(1+(d.empl_chng_pct/100)) })])
+            .domain([1, d3.max(data, function (d) { return d.employment_exp })])
             .range([0,figwidth]);  
         svg.append("g")
             .attr("transform", "translate(" + barstart + "," + figheight + ")")
-            .call(d3.axisBottom(x2)
-                //.tickFormat(d3.format("s"))
-            );
-        //console.log(x2(data[0].employment*1000));
+            .call(d3.axisBottom(x2));
         function lbl_loc(v) {
             return v > 75 ? v/2 : v+2;
         };
@@ -200,7 +229,7 @@ $(function() {
             .append("rect")
             .attr("y", function(d){ return y(d.occupation) })
             .attr("x", barstart)
-            .attr("width", function(d){ return x2(d.employment*(1+(d.empl_chng_pct/100))) })
+            .attr("width", function(d){ return x2(d.employment_exp) })
             .attr("height", boxHeight/2 )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
@@ -222,34 +251,13 @@ $(function() {
             .enter()
             .append("text")             
             .attr("transform", function(d) {
-                return "translate(" + (barstart+lbl_loc(x2(d.employment*(1+(d.empl_chng_pct/100))))) + "," + (y(d.occupation)+boxHeight/4+2.5) + ")"
+                return "translate(" + (barstart+lbl_loc(x2(d.employment_exp))) + "," + (y(d.occupation)+boxHeight/4+2.5) + ")"
             })
-            .style("text-anchor", function(d) { return lbl_anchr(x2(d.employment*(1+(d.empl_chng_pct/100)))) })
+            .style("text-anchor", function(d) { return lbl_anchr(x2(d.employment_exp)) })
             .style("font-size", 10)
             .text("2026 (Expected)");
-        // svg
-        //     .selectAll("bubbles")
-        //     .data(data)
-        //     .enter()
-        //     .append("circle")
-        //     .attr("r", function(d){ return size(d.employment) })
-        //     .attr("cy", function(d){ return y(d.occupation) })
-        //     .attr("cx", margin.left+figwidth+margin.right/2)
-        //     .attr("stroke", "black")
-        //     .style("fill", "steelblue")
-        //     .style("opacity", 0.5);
-        // svg
-        //     .selectAll("bubblelabels")
-        //     .data(data)
-        //     .enter()
-        //     .append("text")             
-        //     .attr("transform", function(d) {
-        //         return "translate(" + (margin.left+figwidth+margin.right/2) + "," + (y(d.occupation)+5) + ")"
-        //     })
-        //     .style("text-anchor", "middle")
-        //     .style("font-size", 10)
-        //     .text(function(d) { return d.employment });
-        svg.append("text")             
+        svg
+            .append("text")             
             .attr("transform",
                   "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (height-margin.bottom+20) + ")")
             .style("text-anchor", "middle")
@@ -263,6 +271,7 @@ $(function() {
     $( "#progressbar" ).progressbar({ value : false });
     $( ".progress-label" );
 
+    // Set up button to submit query
     var button = d3.select("#button")
         .on("click", function() {
             var v = query.property("value");
