@@ -166,11 +166,10 @@ $(function() {
         //     .range([5,(margin.right-10)/2]);
         var x2 = d3.scaleLog()
             .domain([1, d3.max(data, function (d) { return d.employment*1000 })])
-            .range([0,figwidth])
-            .tickFormat(5, "s");  
+            .range([0,figwidth]);  
         svg.append("g")
             .attr("transform", "translate(" + (margin.left+figwidth+margin.center) + "," + figheight + ")")
-            .call(d3.axisBottom(x2));
+            .call(d3.axisBottom(x2).tickFormat(5, "s"));
         console.log(x2(data[0].employment*1000));
         svg
             .selectAll("bars")
