@@ -262,7 +262,6 @@ $(function() {
     $( "#accordion" ).accordion();
     $( "#progressbar" ).progressbar({ value : false });
     $( ".progress-label" );
-    $( "#effect" ).toggle( "blind", 500 );
 
     var button = d3.select("#button")
         .on("click", function() {
