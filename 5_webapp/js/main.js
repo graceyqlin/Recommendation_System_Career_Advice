@@ -96,7 +96,7 @@ $(function() {
             .html(function(d) { 
                 out = "";
                 for (i=0; i<d.values.length; i++){
-                    out 1-p0= out + "<p><i>Answer " + (i+1) + ":</i><br>" + d.values[i].answers + "</p>";
+                    out += "<p><i>Answer " + (i+1) + ":</i><br>" + d.values[i].answers + "</p>";
                 };
                 return out; 
             })
