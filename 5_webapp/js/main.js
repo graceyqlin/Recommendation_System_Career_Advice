@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 500,
-        margin = {top: 10, right: 200, bottom: 50, left: 175},
+        margin = {top: 10, right: 300, bottom: 50, left: 175},
         figwidth = width - margin.left - margin.right,
         figheight = height - margin.top - margin.bottom;
 
@@ -165,7 +165,7 @@ $(function() {
         //         , d3.max(data, function (d) { return d.employment })])
         //     .range([5,(margin.right-10)/2]);
         var x2 = d3.scaleLog()
-            .domain([1, d3.max(data, function (d) { return d.empl_2026*1000 })])
+            .domain([1, d3.max(data, function (d) { return d.employment })])
             .range([width-margin.right,width]);  
         svg.append("g")
             .attr("transform", "translate(" + (width-margin.right) + "," + figheight + ")")
@@ -208,7 +208,7 @@ $(function() {
                   "translate(" + (margin.left+figwidth+margin.right/2) + "," + (height - margin.bottom + 20) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
-            .text("Total Employment (Thousands)");
+            .text("2018 Employment (Thousands)");
     };
 
     // Set up jquery ui widgets
