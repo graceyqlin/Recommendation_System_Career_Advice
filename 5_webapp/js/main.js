@@ -113,6 +113,7 @@ $(function() {
         svg.selectAll("*").remove();
         d3.selectAll("#wage_note").remove();
 
+        // Various data cleaning
         var f = fill_null(data);
         if (f) {
             d3.select("#stats")
@@ -124,7 +125,10 @@ $(function() {
         for (i=0; i<data.length; i++){
             data[i].employment_exp = data[i].employment*(1+(data[i].empl_chng_pct/100));
         };
-        console.log(data);
+        data.sort(function(a,b){
+            return a.employment - b.employment;
+        });
+        // console.log(data);
 
         // Boxplots
 
@@ -137,10 +141,9 @@ $(function() {
         svg.append("g")
             .attr("transform", "translate(" + margin.left + ",0)")
             .call(d3.axisLeft(y))
-            // .selectAll("text")  
-            // .style("text-anchor", "end")
             .selectAll(".tick text")
-            .call(wrap, margin.left-5);
+            .style("text-anchor", "end")
+            .call(wrap, margin.left-10);
 
         // Show the X scale
         var x = d3.scaleLinear()
