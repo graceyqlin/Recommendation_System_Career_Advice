@@ -76,7 +76,8 @@ $(function() {
                     line.pop();
                     tspan.text(line.join(" "));
                     line = [word];
-                    tspan = text.append("tspan").attr("x", -7).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                    ++lineNumber;
+                    tspan = text.append("tspan").attr("x", -7).attr("y", y).attr("dy", lineNumber * lineHeight + dy + "em").text(word);
                 }
             }
         });
