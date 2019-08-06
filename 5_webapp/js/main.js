@@ -68,7 +68,7 @@ $(function() {
                 lineHeight = 1.1, // ems
                 y = text.attr("y"),
                 dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan").attr("x", -5).attr("y", y).attr("dy", dy + "em");
+                tspan = text.text(null).append("tspan").attr("x", -7).attr("y", y).attr("dy", dy + "em");
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(" "));
@@ -76,7 +76,7 @@ $(function() {
                     line.pop();
                     tspan.text(line.join(" "));
                     line = [word];
-                    tspan = text.append("tspan").attr("x", -5).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                    tspan = text.append("tspan").attr("x", -7).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
                 }
             }
         });
@@ -104,9 +104,9 @@ $(function() {
     };
 
     function label_stats(occ, path) {
-        h = "<strong>Your question seems to relate to the " + occ
-        h += " occupation. Here's some information about wages, employment, qualifications for that job"
-        h += " and others in the " + path + "career pathway:</strong>"
+        h = "<strong>Your question seems to relate to the '" + occ
+        h += "' occupation. Here's some information about wages, employment, and qualifications for that job"
+        h += " and others in the " + path + " career pathway:</strong>"
         d3.select("#stats-label")
             .html(h);
     };
@@ -151,7 +151,7 @@ $(function() {
             .call(d3.axisLeft(y))
             .selectAll(".tick text")
             .style("text-anchor", "end")
-            .call(wrap, margin.left-10);
+            .call(wrap, margin.left/2);
 
         // Show the X scale
         var x = d3.scaleLinear()
