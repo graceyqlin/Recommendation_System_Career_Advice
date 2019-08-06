@@ -3,8 +3,8 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 400,
-        margin = {top: 10, right: 10, bottom: 50, left: 150, center: 10},
-        figwidth = (width - margin.left - margin.right - margin.center) / 2,
+        margin = {top: 50, right: 10, bottom: 10, left: 150, center: 10},
+        figwidth = (width - margin.left - margin.right - 2*margin.center) / 2.5,
         figheight = height - margin.top - margin.bottom,
         minbarheight = 30;
 
@@ -273,7 +273,7 @@ $(function() {
         svg
             .append("text")             
             .attr("transform",
-                  "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (margintop-20) + ")")
+                  "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (margin.top-20) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
             .text("Employment (Number of Workers)");
