@@ -20,6 +20,8 @@ $(function() {
         .attr("width", width)
         .attr("height", height);
 
+    var closest_occ = "";
+
     function lb(s) {
         if (s.length < 10) { return s }
         else { 
@@ -72,7 +74,6 @@ $(function() {
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(" "));
-                console.log(text + " " + tspan.node().getComputedTextLength());
                 if (tspan.node().getComputedTextLength() > width) {
                     line.pop();
                     tspan.text(line.join(" "));
@@ -148,12 +149,14 @@ $(function() {
             .domain(d3.map(data, function (d) { return d.occupation; }).keys())
             .paddingInner(1)
             .paddingOuter(.5);
-        svg.append("g")
+        var y_axis = svg
+            .append("g")
+            .attr("id", "y-axis")
             .attr("transform", "translate(" + margin.left + ",0)")
             .call(d3.axisLeft(y))
             .selectAll(".tick text")
             .style("text-anchor", "end")
-            .call(wrap, margin.left-20);
+            .call(wrap, margin.left-10);
 
         // Show the X scale
         var x = d3.scaleLinear()
@@ -195,7 +198,7 @@ $(function() {
             .attr("height", boxHeight )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            .style("fill", "steelblue");
+            .style("fill", function(d) { return d.occupation == closest_occ+"s" ? "forestgreen" : "steelblue" });
 
         // Show the median
         svg
@@ -235,7 +238,7 @@ $(function() {
             .attr("height", boxHeight/2 )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            .style("fill", "steelblue")
+            .style("fill", function(d) { return d.occupation == closest_occ+"s" ? "forestgreen" : "steelblue" })
             .style("opacity", 0.8);
         svg
             .selectAll("bars2026")
@@ -248,7 +251,7 @@ $(function() {
             .attr("height", boxHeight/2 )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            .style("fill", "steelblue")
+            .style("fill", function(d) { return d.occupation == closest_occ+"s" ? "forestgreen" : "steelblue" })
             .style("opacity", 0.8);
         svg
             .selectAll("barlabels2018")
@@ -306,7 +309,7 @@ $(function() {
             .attr("height", boxHeight )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            .style("fill", "steelblue")
+            .style("fill", function(d) { return d.occupation == closest_occ+"s" ? "forestgreen" : "steelblue" })
             .style("opacity", 0.8);
         svg
             .selectAll("eduLabels")
@@ -335,6 +338,14 @@ $(function() {
     $( "#progressbar" ).progressbar({ value : false });
     $( ".progress-label" );
 
+    var stats_button = d3.select("#stats-tab-button")
+        .on("click", function () {
+            d3.select("#y-axis")
+                .selectAll(".tick text")
+                .style("text-anchor", "end")
+                .call(wrap, margin.left-10);
+        })
+
     // Set up button to submit query
     var button = d3.select("#button")
         .on("click", function() {
@@ -352,7 +363,8 @@ $(function() {
                     console.log(data);
                     summary.html(data.summary);
                     format_qa_output(data.questions);
-                    label_stats(data.questions[0].closest_occupation, data.questions[0].closest_pathway);
+                    closest_occ = data.questions[0].closest_occupation;
+                    label_stats(closest_occ, data.questions[0].closest_pathway);
                     dashboard(data.stats);
                     $( "#effect" ).toggle( "blind", 500 );
                 },
