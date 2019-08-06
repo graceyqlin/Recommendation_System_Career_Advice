@@ -7,8 +7,8 @@ def clean_sum(summary):
     for i in range(0,len(sum_list)):
         if sum_list[i] in punc:
             sum_list[i-1], sum_list[i]=sum_list[i], sum_list[i-1]
-    for i in range(0,len(sum_list)):        
-        if sum_list[i] == '.' and i != len(sum_list):
+    for i in range(0,len(sum_list)-2):        
+        if sum_list[i] == '.':
             sum_list[i+2] = sum_list[i+2].upper()
     sum_list[0] = sum_list[0].upper()
 
