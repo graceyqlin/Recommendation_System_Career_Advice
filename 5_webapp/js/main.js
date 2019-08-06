@@ -149,11 +149,11 @@ $(function() {
             .paddingInner(1)
             .paddingOuter(.5);
         svg.append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("transform", "translate(" + margin.left + ",0)")
             .call(d3.axisLeft(y))
             .selectAll(".tick text")
             .style("text-anchor", "end")
-            .call(wrap, margin.left/2);
+            .call(wrap, margin.left-20);
 
         // Show the X scale
         var x = d3.scaleLinear()
@@ -164,7 +164,7 @@ $(function() {
             .call(d3.axisTop(x));
         svg.append("text")             
             .attr("transform",
-                  "translate(" + (margin.left + figwidth/2) + "," + (margin.top - 20) + ")")
+                  "translate(" + (margin.left + figwidth/2) + "," + (margin.top - 25) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
             .text("Wage ($ / Hour)");
@@ -273,7 +273,7 @@ $(function() {
         svg
             .append("text")             
             .attr("transform",
-                  "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (margin.top-20) + ")")
+                  "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (margin.top-25) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
             .text("Employment (Number of Workers)");
