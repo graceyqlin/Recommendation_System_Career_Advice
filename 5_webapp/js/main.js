@@ -160,11 +160,11 @@ $(function() {
             .domain([0, d3.max(data , function (d) { return d.hourly_90 }) + 5])
             .range([ margin.left, (margin.left+figwidth) ])
         svg.append("g")
-            .attr("transform", "translate(0," + figheight + ")")
-            .call(d3.axisBottom(x));
+            .attr("transform", "translate(0," + margin.top + ")")
+            .call(d3.axisTop(x));
         svg.append("text")             
             .attr("transform",
-                  "translate(" + (margin.left + figwidth/2) + "," + (height - margin.bottom + 20) + ")")
+                  "translate(" + (margin.left + figwidth/2) + "," + (margin.top - 20) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
             .text("Wage ($ / Hour)");
@@ -216,8 +216,8 @@ $(function() {
             .domain([1, d3.max(data, function (d) { return d.employment_exp })])
             .range([0,figwidth]);  
         svg.append("g")
-            .attr("transform", "translate(" + barstart + "," + figheight + ")")
-            .call(d3.axisBottom(x2).tickFormat(d3.format(".0s")));
+            .attr("transform", "translate(" + barstart + "," + margin.top + ")")
+            .call(d3.axisTop(x2).tickFormat(d3.format(".0s")));
         function lbl_loc(v) {
             return v > 75 ? v/2 : v+2;
         };
@@ -273,10 +273,10 @@ $(function() {
         svg
             .append("text")             
             .attr("transform",
-                  "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (height-margin.bottom+20) + ")")
+                  "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (margintop-20) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
-            .text("Employment, Thousands of Workers");
+            .text("Employment (Number of Workers)");
     };
 
     // Set up jquery ui widgets
@@ -307,7 +307,7 @@ $(function() {
                     $( "#effect" ).toggle( "blind", 500 );
                 },
                 error: function() {
-                    d3.select("#error").html("<strong>Oh no! Something went wrong. Please try another query.<strong>");
+                    d3.select("#error").html("<strong>Oh no! Something went wrong. Please try another query.</strong>");
                     $( "#effect" ).toggle( "blind", 500 );
                 }
             })
