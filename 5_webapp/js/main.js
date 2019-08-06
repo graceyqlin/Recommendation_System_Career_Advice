@@ -130,7 +130,7 @@ $(function() {
                 .append("p")
                 .attr("id", "wage_note")
                 .style("font-size", 10)
-                .html("Note: the Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr, so here those values are plotted at $100/hr.")
+                .html("Note: The Bureau of Labor Statistics does not record hourly wage values that exceed $100/hr, so here those values are plotted at $100/hr.")
         };
         for (i=0; i<data.length; i++){
             data[i].employment_exp = data[i].employment*(1+(data[i].empl_chng_pct/100));
@@ -235,7 +235,8 @@ $(function() {
             .attr("height", boxHeight/2 )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            .style("fill", "steelblue");
+            .style("fill", "steelblue")
+            .style("opacity", 0.8);
         svg
             .selectAll("bars2026")
             .data(data)
@@ -247,7 +248,8 @@ $(function() {
             .attr("height", boxHeight/2 )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            .style("fill", "steelblue");
+            .style("fill", "steelblue")
+            .style("opacity", 0.8);
         svg
             .selectAll("barlabels2018")
             .data(data)
@@ -273,12 +275,57 @@ $(function() {
         svg
             .append("text")             
             .attr("transform",
-                  "translate(" + (margin.left+figwidth+margin.center+figwidth/2) + "," + (margin.top-25) + ")")
+                  "translate(" + (barstart+figwidth/2) + "," + (margin.top-25) + ")")
             .style("text-anchor", "middle")
             .style("font-size", 10)
             .text("Employment (Number of Workers)");
 
         // Qualifications panel
+        var edu_mapping = {
+            "No formal educational credential": 0,
+            "High school diploma or equivalent": 1,
+            "Associate's degree": 3,
+            "Some college, no degree": 2,
+            "Bachelor's degree": 4,
+            "Postsecondary nondegree award": 5,
+            "Master's degree": 6,
+            "Doctoral or professional degree": 7
+        };
+        var edustart = margin.left + margin.center*2 + figwidth*2;
+        var x3 = d3.scaleLinear()
+            .domain([0, 7])
+            .range([0,figwidth/2]);  
+        svg
+            .selectAll("eduBars")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("y", function(d){ return y(d.occupation)-(boxHeight/2) })
+            .attr("x", edustart)
+            .attr("width", function(d){ return x3(edu_mapping[d.entry_edu]) })
+            .attr("height", boxHeight )
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
+            .style("fill", "steelblue")
+            .style("opacity", 0.8);
+        svg
+            .selectAll("eduLabels")
+            .data(data)
+            .enter()
+            .append("text")             
+            .attr("transform", function(d) {
+                return "translate(" + (edustart+figwidth/4) + "," + (y(d.occupation)+2.5) + ")"
+            })
+            .style("text-anchor", "middle")
+            .style("font-size", 10)
+            .text(function (d) { return d.entry_edu });
+        svg
+            .append("text")             
+            .attr("transform",
+                  "translate(" + (edustart+figwidth/4) + "," + (margin.top-25) + ")")
+            .style("text-anchor", "middle")
+            .style("font-size", 10)
+            .text("Minimum Education");
 
     };
 
