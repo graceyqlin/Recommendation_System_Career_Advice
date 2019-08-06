@@ -68,16 +68,17 @@ $(function() {
                 lineHeight = 1.1, // ems
                 y = text.attr("y"),
                 dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan").attr("x", -7).attr("y", y).attr("dy", dy + "em");
+                tspan = text.text(null).append("tspan").attr("x", -9).attr("y", y).attr("dy", dy + "em");
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(" "));
+                console.log(text + " " + tspan.node().getComputedTextLength());
                 if (tspan.node().getComputedTextLength() > width) {
                     line.pop();
                     tspan.text(line.join(" "));
                     line = [word];
                     ++lineNumber;
-                    tspan = text.append("tspan").attr("x", -7).attr("y", y).attr("dy", lineNumber * lineHeight + dy + "em").text(word);
+                    tspan = text.append("tspan").attr("x", -9).attr("y", y).attr("dy", lineNumber * lineHeight + dy + "em").text(word);
                 }
             }
         });
@@ -288,6 +289,7 @@ $(function() {
     var button = d3.select("#button")
         .on("click", function() {
             var v = query.property("value");
+            d3.select("#error").html("");
             $( "#effect" ).toggle( "blind", 500 );
             $.ajax({
                 beforeSend: function(req){
@@ -302,6 +304,10 @@ $(function() {
                     format_qa_output(data.questions);
                     label_stats(data.questions[0].closest_occupation, data.questions[0].closest_pathway);
                     dashboard(data.stats);
+                    $( "#effect" ).toggle( "blind", 500 );
+                },
+                error: function() {
+                    d3.select("#error").html("<strong>Oh no! Something went wrong. Please try another query.<strong>");
                     $( "#effect" ).toggle( "blind", 500 );
                 }
             })
