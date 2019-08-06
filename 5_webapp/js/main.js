@@ -22,16 +22,6 @@ $(function() {
 
     var closest_occ = "";
 
-    function lb(s) {
-        if (s.length < 10) { return s }
-        else { 
-            spl = s.split(" ");
-            spaces = spl.length - 1;
-            br = Math.ceil(spaces / 2);
-            return spl.slice(0, br).join(" ") + "\n" + spl.slice(br,spaces+1).join(" ");
-        };
-    };
-
     function fill_null(d) {
         var filled = false;
         for (i=0; i<d.length; i++){
@@ -82,6 +72,9 @@ $(function() {
                     tspan = text.append("tspan").attr("x", -9).attr("y", y).attr("dy", lineNumber * lineHeight + dy + "em").text(word);
                 }
             }
+            text.selectAll("tspan").attr("dy", function() {
+                return parseFloat(d3.select(this).attr("dy")) - (lineNumber*lineHeight/2) + "em";
+            });
         });
     }
 

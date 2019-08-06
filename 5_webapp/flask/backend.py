@@ -17,7 +17,7 @@ def root():
     request.get_data()
     query = request.values['userinput']
     q_df = rec.find_similar_questions(query)
-    ans = ' || '.join(q_df.answers.values.tolist()).encode('utf-8')
+    ans = ' '.join(q_df.answers.values.tolist()).encode('utf-8')
     summary_raw = summ.run_example_summary(ans)
     summary = clean.clean_sum(summary_raw)
     stats = oes.get_cluster_data(q_df.closest_pathway.iloc[0])
