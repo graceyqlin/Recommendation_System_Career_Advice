@@ -144,12 +144,12 @@ $(function() {
 
         // Show the Y scale
         var y = d3.scaleBand()
-            .range([figheight, margin.bottom])
+            .range([figheight, margin.top])
             .domain(d3.map(data, function (d) { return d.occupation; }).keys())
             .paddingInner(1)
             .paddingOuter(.5);
         svg.append("g")
-            .attr("transform", "translate(" + margin.left + ",0)")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .call(d3.axisLeft(y))
             .selectAll(".tick text")
             .style("text-anchor", "end")
@@ -210,7 +210,7 @@ $(function() {
             .attr("stroke", "black")
             .style("width", 80)
 
-        // Employment bubble plot
+        // Employment bar plot
         var barstart = margin.left+figwidth+margin.center;
         var x2 = d3.scaleLinear()
             .domain([1, d3.max(data, function (d) { return d.employment_exp })])
@@ -277,6 +277,9 @@ $(function() {
             .style("text-anchor", "middle")
             .style("font-size", 10)
             .text("Employment (Number of Workers)");
+
+        // Qualifications panel
+
     };
 
     // Set up jquery ui widgets
