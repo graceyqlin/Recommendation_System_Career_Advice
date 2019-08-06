@@ -4,6 +4,7 @@ import pymysql
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import string
+import numpy as np
 
 # read in Q&A dataset
 connection = pymysql.connect(host='35.226.35.190',
@@ -65,7 +66,7 @@ def find_similar_questions(question_body):
     # first get the similar questions
     scores = cosine_similarity(x, vec_matrix)
     similar_inds = scores.argsort()[0][-6:-1]
-    similar_qs = pd.DataFrame([questions[i] for i in similar_inds], columns = {'questions_body_clean'})
+    similar_qs = pd.DataFrame([questions[i] for i in np.flip(similar_inds)], columns = {'questions_body_clean'})
     similar_q_join = pd.merge(left = similar_qs, right = questions_df, on ='questions_body_clean', how='inner')
     out = similar_q_join[['questions_id','questions_body_clean','answers_score','answers_body_clean']].copy()
     
