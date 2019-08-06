@@ -7,6 +7,7 @@ sys.path.insert(1, '/home/final/pointer-generator-master/model_generator_files')
 import capstone_recommendation as rec
 import RunOneSummary as summ
 import get_oes_data as oes
+import clean_summary as clean
 
 app = Flask(__name__)
 CORS(app)
@@ -17,7 +18,8 @@ def root():
     query = request.values['userinput']
     q_df = rec.find_similar_questions(query)
     ans = ' || '.join(q_df.answers.values.tolist()).encode('utf-8')
-    summary = summ.run_example_summary(ans)
+    summary_raw = summ.run_example_summary(ans)
+    summary = clean.clean_sum(summary_raw)
     stats = oes.get_cluster_data(q_df.closest_pathway.iloc[0])
     response = jsonify({
         'summary': summary,
