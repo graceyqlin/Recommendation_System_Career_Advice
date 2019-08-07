@@ -19,7 +19,9 @@ def root():
     q_df = rec.find_similar_questions(query)
     ans = ' '.join(q_df.answers.values.tolist()).encode('utf-8')
     summary_raw = summ.run_example_summary(ans)
+    print summary_raw
     summary = clean.clean_sum(summary_raw)
+    print summary
     stats = oes.get_cluster_data(q_df.closest_pathway.iloc[0])
     response = jsonify({
         'summary': summary,
