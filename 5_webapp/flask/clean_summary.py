@@ -1,6 +1,6 @@
 from string import punctuation
 
-punc = punctuation.replace('-','')
+punc = [',','.']
 
 def clean_sum(summary):
     sum_list = list(summary)

@@ -6,7 +6,7 @@ $(function() {
         margin = {top: 50, right: 10, bottom: 10, left: 150, center: 10},
         figwidth = (width - margin.left - margin.right - 2*margin.center) / 2.5,
         figheight = height - margin.top - margin.bottom,
-        minbarheight = 30;
+        minbarheight = 36;
 
     var flask_ip = 'http://35.225.248.118:5001/'
 
@@ -73,7 +73,7 @@ $(function() {
                 }
             }
             text.selectAll("tspan").attr("dy", function() {
-                return parseFloat(d3.select(this).attr("dy")) - (lineNumber*lineHeight/2) + "em";
+                return Math.round((parseFloat(d3.select(this).attr("dy")) - (lineNumber*lineHeight/2))*100)/100 + "em";
             });
         });
     }
@@ -149,7 +149,7 @@ $(function() {
             .call(d3.axisLeft(y))
             .selectAll(".tick text")
             .style("text-anchor", "end")
-            .call(wrap, margin.left-10);
+            .call(wrap, margin.left);
 
         // Show the X scale
         var x = d3.scaleLinear()
@@ -335,8 +335,7 @@ $(function() {
         .on("click", function () {
             d3.select("#y-axis")
                 .selectAll(".tick text")
-                .style("text-anchor", "end")
-                .call(wrap, margin.left-10);
+                .call(wrap, margin.left);
         })
 
     // Set up button to submit query
