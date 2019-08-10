@@ -3,7 +3,7 @@ $(function() {
     // Set up globals
     var width = 950,
         height = 400,
-        margin = {top: 50, right: 10, bottom: 10, left: 150, center: 10},
+        margin = {top: 50, right: 10, bottom: 10, left: 175, center: 10},
         figwidth = (width - margin.left - margin.right - 2*margin.center) / 2.5,
         figheight = height - margin.top - margin.bottom,
         minbarheight = 36;
