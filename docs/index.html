@@ -15,19 +15,30 @@
 
     <h4>Our Solution</h4>
     <p>We want to bring together useful information for jobseekers, primarily by synthesizing advice relevant to their career goals. We used a dataset of career-related questions and answers from CareerVillage.com supplemented with scraped threads from reddit.com/r/careerguidance. Given these data sources, we built a recommendation model to select the set of questions in our corpus that are most similar to a user's query. We then feed the results of this model into a summarization model that condenses the answers to those questions into a digestible form for users</p> 
+    <img src="img/cars-pipeline.png" style="display: block; margin-left: auto; margin-right: auto; width: 80%;">
+
     <p>Here's what a user sees after submitting a query:</p>
     <img src="img/cars-main.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 
     <p>We also infer which Bureau of Labor Statistics occupations are most relevant to a user's query, and display a small dashboard of statistics about that and related occupations.</p>
     <img src="img/cars-stats.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
 
-
     <h5>Recommendation</h5>
+    <p>Our recommendation model uses a TF-IDF vectorizer to embed the text of the questions we have in our corpus, then applies an additional weighting for the names of occupations in the Bureau of Labor Statistics Standard Occupation Code (SOC) classifications. We then use cosine similarity to evaluate the similarity of the questions.</p>
 
     <h5>Summarization</h5>
+    <p>Our summarization model utilizes a pointer-generator with coverage framework adapted from See et. al, “Get To The Point: Summarization with Pointer-Generator Networks”. The "pointer" portion of the model is <i>extractive</i>, pulling important snippets from the corpus of documents it is summarizing. The "generator" portion of the model is <i>abstractive</i>, creating new text based on the content of documents. The "coverage" portion of the model <i>minimizes repetition</i> by scanning over the output of the first two portions and eliminating redundancy.</p>
+
+    <p>Why use the pointer-generator model with coverage? The structure of the Q&A responses makes traditional extractive models less effective since key points can occur anywhere in the document. Responses between different users may also repeat the same points multiple times. Because of this, we need to apply coverage to make sure responses are not repetitive. In addition, Q&A responses may utilize industry vernacular, which may not appear in the abstractive vocabulary. This means we need extractive document context.</p>
+
+    <p>The summarization model was trained for a total of 124 hours on a combined corpus of our Q&A documents as well as the CNN/Daily News Dataset.</p>
 
     <h4>Evaluation</h4>
+    <p>We conducted two Qualtrics surveys asking users to rate the quality of our summarizations for 10 example questions. In our first iteration, the results were poor on average, so we conducted additional training of the summarization model and subsequently improved our average scores by 1 point out of 5.</p>
+    <img src="img/cars-eval1.png" style="display: block; margin-left: auto; margin-right: auto; width: 80%;">
+    <img src="img/cars-eval2.png" style="display: block; margin-left: auto; margin-right: auto; width: 80%;">
 
     <h4>Conclusion</h4>
+    <p>Our solution is able to synthesize a large corpus of career advice into helpful respones for users (though evaluators only rated the responses "good" on average). We believe that with additional iteration and a larger corpus of questions and answers, this framework could provide a useful tool for jobseekers looking to take the next step in their careers.</p>
   </body>
 </html>
