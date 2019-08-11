@@ -1,0 +1,4 @@
+model_checkpoint_path: "/home/final/pointer-generator-master/log/combined_files/train/model.ckpt-65193"
+all_model_checkpoint_paths: "/home/amkabatznick/w266-final-project/models/pointer-generator/log/combined_files/train/model.ckpt-65172"
+all_model_checkpoint_paths: "/home/amkabatznick/w266-final-project/models/pointer-generator/log/combined_files/train/model.ckpt-65182"
+all_model_checkpoint_paths: "/home/amkabatznick/w266-final-project/models/pointer-generator/log/combined_files/train/model.ckpt-65193"
